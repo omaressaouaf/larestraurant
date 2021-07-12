@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@section('description')
+Commandez le meilleur menu
+@endsection
 @section('content')
     @include('includes.hero')
     <main id="main">

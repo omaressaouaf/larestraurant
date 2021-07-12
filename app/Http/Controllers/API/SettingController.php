@@ -35,8 +35,8 @@ class SettingController extends Controller
             'name' => "required",
             'newLogo' => "nullable|image|dimensions:max_width=300,max_height=200",
             "contact.email" => "nullable|email",
-            "contact.social_media.facebook" => "required|url",
-            "contact.social_media.instagram" => "required|url"
+            "contact.social_media.facebook" => "nullable|url",
+            "contact.social_media.instagram" => "nullable|url"
         ]);
         Setting::set(['app.name' => $request->name, 'app.contact' => $request->contact]);
         $res = ['msg' => "general settings updated successfully"];

@@ -4787,7 +4787,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_dashboard_Dashboard_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/dashboard/Dashboard.vue */ "./resources/js/admin/components/dashboard/Dashboard.vue"));
   },
   meta: {
-    title: "Dashboard"
+    title: "Administration"
   }
 }, {
   path: "/admin/users",
@@ -4796,7 +4796,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_users_UsersList_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/users/UsersList.vue */ "./resources/js/admin/components/users/UsersList.vue"));
   },
   meta: {
-    title: "Users"
+    title: "Utilisateurs"
   },
   beforeEnter: checkManageGate
 }, {
@@ -4806,7 +4806,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_users_UsersForm_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/users/UsersForm.vue */ "./resources/js/admin/components/users/UsersForm.vue"));
   },
   meta: {
-    title: "Create User"
+    title: "Créer un utilisateur"
   },
   beforeEnter: checkManageGate
 }, {
@@ -4816,7 +4816,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_users_UsersForm_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/users/UsersForm.vue */ "./resources/js/admin/components/users/UsersForm.vue"));
   },
   meta: {
-    title: "Edit User"
+    title: "Modifier l'utilisateur"
   },
   beforeEnter: checkManageGate
 }, {
@@ -4826,7 +4826,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_categories_CategoriesList_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/categories/CategoriesList.vue */ "./resources/js/admin/components/categories/CategoriesList.vue"));
   },
   meta: {
-    title: "Categories"
+    title: "Catégories"
   },
   beforeEnter: checkManageGate
 }, {
@@ -4836,7 +4836,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_categories_CategoriesForm_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/categories/CategoriesForm.vue */ "./resources/js/admin/components/categories/CategoriesForm.vue"));
   },
   meta: {
-    title: "Create Category"
+    title: "Créer une catégorie"
   },
   beforeEnter: checkManageGate
 }, {
@@ -4846,7 +4846,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_categories_CategoriesForm_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/categories/CategoriesForm.vue */ "./resources/js/admin/components/categories/CategoriesForm.vue"));
   },
   meta: {
-    title: "Edit Category"
+    title: "Modifier la catégorie"
   },
   beforeEnter: checkManageGate
 }, {
@@ -4866,7 +4866,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_extras_ExtrasForm_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/extras/ExtrasForm.vue */ "./resources/js/admin/components/extras/ExtrasForm.vue"));
   },
   meta: {
-    title: "Create Extra"
+    title: "Créer un extra"
   },
   beforeEnter: checkManageGate
 }, {
@@ -4876,7 +4876,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_extras_ExtrasForm_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/extras/ExtrasForm.vue */ "./resources/js/admin/components/extras/ExtrasForm.vue"));
   },
   meta: {
-    title: "Edit Extra"
+    title: "Modifier l'extra"
   },
   beforeEnter: checkManageGate
 }, {
@@ -4896,7 +4896,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_meals_MealsForm_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/meals/MealsForm.vue */ "./resources/js/admin/components/meals/MealsForm.vue"));
   },
   meta: {
-    title: "Create Menu"
+    title: "Créer un menu"
   },
   beforeEnter: checkManageGate
 }, {
@@ -4906,7 +4906,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_meals_MealsForm_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/meals/MealsForm.vue */ "./resources/js/admin/components/meals/MealsForm.vue"));
   },
   meta: {
-    title: "Edit Menu"
+    title: "Modifier le menu"
   },
   beforeEnter: checkManageGate
 }, {
@@ -4916,7 +4916,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_orders_OrdersList_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/orders/OrdersList.vue */ "./resources/js/admin/components/orders/OrdersList.vue"));
   },
   meta: {
-    title: "Orders"
+    title: "Commandes"
   }
 }, {
   path: "/admin/orders/:id",
@@ -4925,7 +4925,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_orders_OrdersSingle_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/orders/OrdersSingle.vue */ "./resources/js/admin/components/orders/OrdersSingle.vue"));
   },
   meta: {
-    title: "Order Details"
+    title: "Détails de la commande"
   }
 }, {
   path: "/admin/sections",
@@ -4943,7 +4943,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_settings_SettingsIndex_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/settings/SettingsIndex.vue */ "./resources/js/admin/components/settings/SettingsIndex.vue"));
   },
   meta: {
-    title: "Settings"
+    title: "Paramètres"
   },
   beforeEnter: checkManageGate
 }, {
@@ -4953,7 +4953,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_admin_components_profile_Profile_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/profile/Profile.vue */ "./resources/js/admin/components/profile/Profile.vue"));
   },
   meta: {
-    title: "Profile"
+    title: "Profil"
   }
 }, {
   path: '/admin/403',
@@ -5040,6 +5040,7 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_8__.default.Store({
   state: {
     appName: window.appName,
     appLogo: window.appLogo,
+    appUrl: window.appUrl,
     deliveryZoneBounds: window.deliveryZoneBounds
   },
   mutations: {

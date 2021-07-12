@@ -28063,6 +28063,7 @@ section {
 
 .btn-orange:hover {
   background: #d3af71;
+  color: #fff !important;
 }
 
 .btn-outline-orange {

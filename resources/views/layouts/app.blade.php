@@ -3,14 +3,14 @@
 
 <head>
     <!-- Required meta tags -->
-    <meta content="" name="description">
+    <meta content="@yield('description')" name="description">
     <meta content="" name="keywords">
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name') }}</title>
+    <title>@yield('title') {{ config('app.name') }}</title>
 
     {{-- fav icon --}}
     <link href="/storage/images/design/favicon.png" rel="icon">
@@ -59,7 +59,12 @@
         window.deliveryPrice = @json(config('delivery.price'));
         window.deliveryTime = @json(config('delivery.time'));
         window.minOrderPrice = @json(config('cart.min_order_price'));
-        window.authUser = @json(auth()->user());
+        const authUser = @json(auth()->user());
+        if(authUser) {
+
+            authUser['roles'] = @json(auth()->check() ? auth()->user()->roles()->pluck('name') : []) ;
+        }
+        window.authUser = authUser;
         window.appName = '{{ config('app.name') }}';
         window.appLogo = '{{ config('app.logo') }}';
         window.canShop = @json(Gate::allows('shop'));

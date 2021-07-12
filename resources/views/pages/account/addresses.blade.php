@@ -1,4 +1,7 @@
 @extends('layouts.account')
+@section('title')
+Carnet d'adresses -
+@endsection
 @section('account-content')
     <div class="mt-4">
         <h4 class="font-weight-bold"># {{ __('Your Address Book') }}</h4>
