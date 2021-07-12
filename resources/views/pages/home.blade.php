@@ -20,7 +20,7 @@
                 <div class="row menu-container" data-aos="fade-up" data-aos-delay="200">
                     @foreach ($latestMeals as $meal)
                         <div class="col-lg-6 menu-item filter-starters">
-                            <img src="{{$meal->resizedImage}}" width="100" height="70" class="menu-img" alt="">
+                            <img src="{{$meal->resized_image}}" width="100" height="70" class="menu-img" alt="">
                             <div class="menu-content" >
                                 <a  href="#" style="background: transparent">{{$meal->title}}</a><span >{{$meal->price}} dhs</span>
                             </div>

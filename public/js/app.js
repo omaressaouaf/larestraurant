@@ -64393,36 +64393,15 @@ var render = function() {
                               ],
                               2
                             )
-                          : _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "text-center mt-4 mb-4 alert alert-warning"
-                              },
-                              [
-                                _c("i", {
-                                  staticClass:
-                                    "fa fa-utensils fa-2x text-white mb-3"
-                                }),
-                                _vm._v(" "),
-                                _c("h4", [
-                                  _vm._v(
-                                    _vm._s(_vm.translate("front.cartEmpty")) +
-                                      "."
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("h6", { staticClass: "text-small" }, [
-                                  _vm._v(
-                                    "\n              " +
-                                      _vm._s(
-                                        _vm.translate("front.cartEmptyText")
-                                      ) +
-                                      "\n            "
-                                  )
-                                ])
-                              ]
-                            )
+                          : _c("div", { staticClass: "text-center mt-4" }, [
+                              _c("img", {
+                                staticClass: "img-fluid ",
+                                attrs: {
+                                  src: "/storage/images/design/cart-closed.svg",
+                                  alt: "Fermé temporairement"
+                                }
+                              })
+                            ])
                       ]
                     )
                   ]),
@@ -64579,7 +64558,7 @@ var render = function() {
                     },
                     [
                       _c("img", {
-                        staticClass: "img-fluid",
+                        staticClass: "img-fluid mb-5",
                         attrs: {
                           src: "/storage/images/design/cart-closed.svg",
                           alt: "Fermé temporairement"
@@ -64816,7 +64795,7 @@ var render = function() {
       _c("img", {
         staticClass: "card-img",
         class: [!_vm.meal.active ? "dark-bg" : ""],
-        attrs: { src: _vm.meal.resizedImage, alt: "Vans" },
+        attrs: { src: _vm.meal.resized_image, alt: "Vans" },
         on: { load: _vm.setImageLoading }
       }),
       _vm._v(" "),

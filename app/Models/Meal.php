@@ -18,7 +18,7 @@ class Meal extends Model implements Searchable
         'active' => 'boolean'
     ];
 
-    protected $fillable = ['title', 'desc', 'image', 'price', 'active', 'category_id'];
+    protected $guarded = [];
 
     public $searchableType = 'menus';
 
@@ -50,5 +50,13 @@ class Meal extends Model implements Searchable
     {
         $path =  "/public/images/meals/" . $this->id;
         Storage::deleteDirectory($path);
+    }
+    public function getImageAttribute($value)
+    {
+        return $value === null ? "/storage/images/meals/noimage.jpg" : $value;
+    }
+    public function getResizedImageAttribute($value)
+    {
+        return $value === null ? "/storage/images/meals/noimage.jpg" : $value;
     }
 }

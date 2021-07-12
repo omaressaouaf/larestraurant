@@ -10,7 +10,7 @@
       @load="setImageLoading"
       class="card-img"
       :class="[!meal.active ? 'dark-bg' : '']"
-      :src="meal.resizedImage"
+      :src="meal.resized_image"
       alt="Vans"
     />
 

@@ -106,12 +106,12 @@
               </p>
             </div>
 
-            <div v-else class="text-center mt-4 mb-4 alert alert-warning">
-              <i class="fa fa-utensils fa-2x text-white mb-3"></i>
-              <h4>{{ translate("front.cartEmpty") }}.</h4>
-              <h6 class="text-small">
-                {{ translate("front.cartEmptyText") }}
-              </h6>
+            <div v-else class="text-center mt-4">
+              <img
+                src="/storage/images/design/cart-closed.svg"
+                alt="Fermé temporairement"
+                class="img-fluid "
+              />
             </div>
           </div>
         </div>
@@ -224,13 +224,13 @@
         <h5 class="mb-4">
           {{ translate("front.yourCart") }}
         </h5>
-        <div class="text-center" style="position : relative">
+        <div class="text-center" style="position: relative">
           <img
             src="/storage/images/design/cart-closed.svg"
             alt="Fermé temporairement"
-            class="img-fluid"
+            class="img-fluid mb-5"
           />
-        <h2>{{translate('front.closedNow')}}</h2>
+          <h2>{{ translate("front.closedNow") }}</h2>
         </div>
       </div>
     </div>
