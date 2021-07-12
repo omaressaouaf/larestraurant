@@ -2725,6 +2725,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       authUser: window.authUser
     };
   },
+  props: ["dropdownUniqueId"],
   methods: {
     revertToDefaultDocumentTitle: function revertToDefaultDocumentTitle() {
       var oldNotificationsTemplate = "(".concat(this.unreadNotificationsLength, ")");
@@ -2935,7 +2936,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var _this5 = this;
 
     //   listening for dropdown close event
-    $("#notificationsDropdown").on("hide.bs.dropdown", function () {
+    $("#notificationsDropdown" + this.dropdownUniqueId).on("hide.bs.dropdown", function () {
+      console.log("hii");
+
       if (_this5.unreadNotificationsLength) {
         _this5.markNotifications();
       }
@@ -52535,7 +52538,7 @@ var render = function() {
     "li",
     {
       staticClass: "nav-item dropdown",
-      attrs: { id: "notificationsDropdown" }
+      attrs: { id: "notificationsDropdown" + _vm.dropdownUniqueId }
     },
     [
       _c(
@@ -53261,7 +53264,9 @@ var render = function() {
               "d-flex flex-row d-lg-none navbar-nav align-items-center"
           },
           [
-            _c("notifications-list"),
+            _c("notifications-list", {
+              attrs: { "dropdown-unique-id": "phone" }
+            }),
             _vm._v(" "),
             _c("locale-switcher"),
             _vm._v(" "),
@@ -53282,7 +53287,9 @@ var render = function() {
               "ul",
               { staticClass: "navbar-nav" },
               [
-                _c("notifications-list"),
+                _c("notifications-list", {
+                  attrs: { "dropdown-unique-id": "desktop" }
+                }),
                 _vm._v(" "),
                 _c(
                   "li",

@@ -1,5 +1,5 @@
 <template>
-  <li class="nav-item dropdown" id="notificationsDropdown">
+  <li class="nav-item dropdown" :id="'notificationsDropdown' + dropdownUniqueId">
     <a
       class="nav-link"
       href="#"
@@ -86,6 +86,7 @@ export default {
       authUser: window.authUser,
     };
   },
+  props: ["dropdownUniqueId"],
 
   methods: {
     revertToDefaultDocumentTitle() {
@@ -258,7 +259,8 @@ export default {
   },
   mounted() {
     //   listening for dropdown close event
-    $("#notificationsDropdown").on("hide.bs.dropdown", () => {
+    $("#notificationsDropdown" + this.dropdownUniqueId).on("hide.bs.dropdown", () => {
+      console.log("hii");
       if (this.unreadNotificationsLength) {
         this.markNotifications();
       }

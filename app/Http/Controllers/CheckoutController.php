@@ -22,10 +22,9 @@ class CheckoutController extends Controller
         if (Gate::denies('checkout')) {
             return redirect()->route('meals.index');
         }
-
-        /** @var \App\Models\User */
-        $authUser = auth()->user();
         if (config('payment.stripeEnabled')) {
+            /** @var \App\Models\User */
+            $authUser = auth()->user();
             return view('pages.checkout')->with('intent', $authUser->createSetupIntent(['usage' => "off_session"]));
         }
         return view('pages.checkout');
