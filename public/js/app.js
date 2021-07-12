@@ -3591,6 +3591,36 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -4654,7 +4684,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "redirectToErrorPageIfNeeded": () => (/* binding */ redirectToErrorPageIfNeeded),
 /* harmony export */   "fireConfirm": () => (/* binding */ fireConfirm),
 /* harmony export */   "fireAlert": () => (/* binding */ fireAlert),
-/* harmony export */   "fireToast": () => (/* binding */ fireToast)
+/* harmony export */   "fireToast": () => (/* binding */ fireToast),
+/* harmony export */   "imageIsValid": () => (/* binding */ imageIsValid)
 /* harmony export */ });
 /* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./router */ "./resources/js/admin/router.js");
 
@@ -4721,6 +4752,9 @@ var fireToast = function fireToast(type, message) {
       align: inAdminPanel ? "right" : "left"
     }
   });
+};
+var imageIsValid = function imageIsValid(file) {
+  return file && (file.type == "image/png" || file.type == "image/gif" || file.type == "image/jpeg" || file.type == "image/gif" || file.type == "image/svg+xml");
 };
 
 /***/ }),
@@ -5817,6 +5851,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var nprogress__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(nprogress__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../router */ "./resources/js/admin/router.js");
 /* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../helpers */ "./resources/js/admin/helpers.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -5846,9 +5886,13 @@ var state = {
     get: false,
     post: false
   },
+  progresses: [],
   serverErrors: null
 };
 var getters = {
+  uploadProgresses: function uploadProgresses(state) {
+    return state.progresses;
+  },
   allMeals: function allMeals(state) {
     return state.meals;
   },
@@ -5885,7 +5929,7 @@ var actions = {
               _context.prev = 8;
               _context.t0 = _context["catch"](0);
               (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.redirectToErrorPageIfNeeded)(_context.t0.response.status);
-              (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireToast)("danger", translate('front.errorMessage'));
+              (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireToast)("danger", translate("front.errorMessage"));
 
             case 12:
               store.commit("clearLoading", "get");
@@ -5921,7 +5965,7 @@ var actions = {
               _context2.prev = 8;
               _context2.t0 = _context2["catch"](0);
               (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.redirectToErrorPageIfNeeded)(_context2.t0.response.status);
-              (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireToast)("danger", translate('front.errorMessage'));
+              (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireToast)("danger", translate("front.errorMessage"));
 
             case 12:
               store.commit("clearLoading");
@@ -5935,143 +5979,223 @@ var actions = {
       }, _callee2, null, [[0, 8]]);
     })));
   },
-  addMeal: function addMeal(store, newMeal) {
+  cancelUpload: function cancelUpload(_, source) {
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-      var config, res;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              _context3.prev = 0;
-              config = {
+              source.cancel();
+
+            case 1:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }))();
+  },
+  addMeal: function addMeal(store, newMeal) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+      var progressIdentifier, source, res;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              progressIdentifier = Date.now();
+              source = axios__WEBPACK_IMPORTED_MODULE_1___default().CancelToken.source();
+              _context4.prev = 2;
+
+              if (newMeal.get("newImage")) {
+                store.commit("setProgress", {
+                  identifier: progressIdentifier,
+                  title: newMeal.get("title"),
+                  percentage: 0,
+                  source: source
+                });
+              } else {
+                store.commit("setLoading", "post");
+              }
+
+              _context4.next = 6;
+              return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/meals", newMeal, {
                 headers: {
                   "Content-Type": "multipart/form-data; charset=utf-8; boundary=" + Math.random().toString().substr(2)
-                }
-              };
-              store.commit("setLoading", "post");
-              _context3.next = 5;
-              return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/meals", newMeal, config);
+                },
+                cancelToken: source.token,
+                onUploadProgress: newMeal.get("newImage") ? function (_ref2) {
+                  var loaded = _ref2.loaded,
+                      total = _ref2.total;
+                  var percentage = parseInt(Math.round(loaded * 100 / total));
+                  store.commit("incrementProgress", {
+                    progressIdentifier: progressIdentifier,
+                    percentage: percentage
+                  });
+                } : function () {}
+              });
 
-            case 5:
-              res = _context3.sent;
+            case 6:
+              res = _context4.sent;
               store.commit("addMeal", res.data.meal);
               store.commit("clearMeal");
               (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireToast)("success", translate("admin.created", {
                 item: "Menu"
               }));
-              _router__WEBPACK_IMPORTED_MODULE_3__.default.push("/admin/meals");
-              _context3.next = 16;
+
+              if (_router__WEBPACK_IMPORTED_MODULE_3__.default.currentRoute.name === "meals.create") {
+                _router__WEBPACK_IMPORTED_MODULE_3__.default.push("/admin/meals");
+              }
+
+              _context4.next = 16;
               break;
 
-            case 12:
-              _context3.prev = 12;
-              _context3.t0 = _context3["catch"](0);
-              (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.redirectToErrorPageIfNeeded)(_context3.t0.response.status);
-              store.commit("setServerErrors", _context3.t0);
+            case 13:
+              _context4.prev = 13;
+              _context4.t0 = _context4["catch"](2);
+
+              if (axios__WEBPACK_IMPORTED_MODULE_1___default().isCancel(_context4.t0)) {
+                (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireToast)("info", translate("admin.uploadWasCancelled"));
+              } else {
+                (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.redirectToErrorPageIfNeeded)(_context4.t0.response.status);
+                store.commit("setServerErrors", _context4.t0);
+              }
 
             case 16:
+              _context4.prev = 16;
               store.commit("clearLoading", "post");
+              store.commit("clearProgress", progressIdentifier);
+              return _context4.finish(16);
 
-            case 17:
+            case 20:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
         }
-      }, _callee3, null, [[0, 12]]);
+      }, _callee4, null, [[2, 13, 16, 20]]);
     }))();
   },
   fetchMeal: function fetchMeal(store, id) {
-    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
       var res;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
-              _context4.prev = 0;
+              _context5.prev = 0;
               store.commit("setLoading", "get");
-              _context4.next = 4;
+              _context5.next = 4;
               return axios__WEBPACK_IMPORTED_MODULE_1___default().get("/api/meals/".concat(id));
 
             case 4:
-              res = _context4.sent;
+              res = _context5.sent;
               store.commit("setMeal", res.data.meal);
-              _context4.next = 12;
+              _context5.next = 12;
               break;
 
             case 8:
-              _context4.prev = 8;
-              _context4.t0 = _context4["catch"](0);
-              (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.redirectToErrorPageIfNeeded)(_context4.t0.response.status);
-              store.commit("setServerErrors", _context4.t0);
+              _context5.prev = 8;
+              _context5.t0 = _context5["catch"](0);
+              (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.redirectToErrorPageIfNeeded)(_context5.t0.response.status);
+              store.commit("setServerErrors", _context5.t0);
 
             case 12:
               store.commit("clearLoading", "get");
 
             case 13:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
         }
-      }, _callee4, null, [[0, 8]]);
+      }, _callee5, null, [[0, 8]]);
     }))();
   },
   updateMeal: function updateMeal(store, updatedMeal) {
-    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
-      var config, res;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
+      var progressIdentifier, source, res;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
-              _context5.prev = 0;
-              config = {
-                headers: {
-                  "Content-Type": "multipart/form-data; charset=utf-8; boundary=" + Math.random().toString().substr(2)
-                }
-              };
-              store.commit("setLoading", "post"); // even tho it's supposed to be a PUT method . we replaced it with POST in order for php to parse the form data and proccess it . but we need an additional
+              progressIdentifier = Date.now();
+              source = axios__WEBPACK_IMPORTED_MODULE_1___default().CancelToken.source();
+              _context6.prev = 2;
+
+              if (updatedMeal.get("newImage")) {
+                store.commit("setProgress", {
+                  identifier: progressIdentifier,
+                  title: updatedMeal.get("title"),
+                  percentage: 0,
+                  source: source
+                });
+              } else {
+                store.commit("setLoading", "post");
+              } // even tho it's supposed to be a PUT method . we replaced it with POST in order for php to parse the form data and proccess it . but we need an additional
               // we appended the put method in order for the route to catch it
 
-              updatedMeal.append("_method", "PUT");
-              _context5.next = 6;
-              return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/meals/".concat(updatedMeal.get("id")), updatedMeal, config);
 
-            case 6:
-              res = _context5.sent;
+              updatedMeal.append("_method", "PUT");
+              _context6.next = 7;
+              return axios__WEBPACK_IMPORTED_MODULE_1___default().post("/api/meals/".concat(updatedMeal.get("id")), updatedMeal, {
+                headers: {
+                  "Content-Type": "multipart/form-data; charset=utf-8; boundary=" + Math.random().toString().substr(2)
+                },
+                cancelToken: source.token,
+                onUploadProgress: updatedMeal.get("newImage") ? function (_ref3) {
+                  var loaded = _ref3.loaded,
+                      total = _ref3.total;
+                  var percentage = parseInt(Math.round(loaded * 100 / total));
+                  store.commit("incrementProgress", {
+                    progressIdentifier: progressIdentifier,
+                    percentage: percentage
+                  });
+                } : function () {}
+              });
+
+            case 7:
+              res = _context6.sent;
               store.commit("updateMeal", res.data.meal);
               (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireToast)("success", translate("admin.updated", {
                 item: "Menu"
               }));
               _router__WEBPACK_IMPORTED_MODULE_3__.default.push("/admin/meals");
-              _context5.next = 16;
+              _context6.next = 16;
               break;
 
-            case 12:
-              _context5.prev = 12;
-              _context5.t0 = _context5["catch"](0);
-              (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.redirectToErrorPageIfNeeded)(_context5.t0.response.status);
-              store.commit("setServerErrors", _context5.t0);
+            case 13:
+              _context6.prev = 13;
+              _context6.t0 = _context6["catch"](2);
+
+              if (axios__WEBPACK_IMPORTED_MODULE_1___default().isCancel(_context6.t0)) {
+                (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireToast)("info", translate("admin.uploadWasCancelled"));
+              } else {
+                (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.redirectToErrorPageIfNeeded)(_context6.t0.response.status);
+                store.commit("setServerErrors", _context6.t0);
+              }
 
             case 16:
+              _context6.prev = 16;
               store.commit("clearLoading", "post");
+              store.commit("clearProgress", progressIdentifier);
+              return _context6.finish(16);
 
-            case 17:
+            case 20:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
         }
-      }, _callee5, null, [[0, 12]]);
+      }, _callee6, null, [[2, 13, 16, 20]]);
     }))();
   },
   bulkDeleteMeals: function bulkDeleteMeals(store, selectedItems) {
     return new Promise( /*#__PURE__*/function () {
-      var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6(resolve) {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
+      var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee7(resolve) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee7$(_context7) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context7.prev = _context7.next) {
               case 0:
-                _context6.prev = 0;
+                _context7.prev = 0;
                 store.commit("setLoading", "post");
-                _context6.next = 4;
+                _context7.next = 4;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().delete("/api/meals/bulk/" + selectedItems);
 
               case 4:
@@ -6079,28 +6203,28 @@ var actions = {
                 (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireToast)("success", translate("admin.bulkDeleted"));
                 store.commit("clearLoading", "post");
                 resolve();
-                _context6.next = 14;
+                _context7.next = 14;
                 break;
 
               case 10:
-                _context6.prev = 10;
-                _context6.t0 = _context6["catch"](0);
-                (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.redirectToErrorPageIfNeeded)(_context6.t0.response.status);
-                (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireToast)("danger", translate('front.errorMessage'));
+                _context7.prev = 10;
+                _context7.t0 = _context7["catch"](0);
+                (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.redirectToErrorPageIfNeeded)(_context7.t0.response.status);
+                (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireToast)("danger", translate("front.errorMessage"));
 
               case 14:
                 store.commit("clearLoading", "post");
 
               case 15:
               case "end":
-                return _context6.stop();
+                return _context7.stop();
             }
           }
-        }, _callee6, null, [[0, 10]]);
+        }, _callee7, null, [[0, 10]]);
       }));
 
       return function (_x) {
-        return _ref2.apply(this, arguments);
+        return _ref4.apply(this, arguments);
       };
     }());
   }
@@ -6134,6 +6258,23 @@ var mutations = {
       state.meals = state.meals.filter(function (meal) {
         return meal.id !== id;
       });
+    });
+  },
+  setProgress: function setProgress(state, progress) {
+    state.progresses = [progress].concat(_toConsumableArray(state.progresses));
+  },
+  incrementProgress: function incrementProgress(state, _ref5) {
+    var progressIdentifier = _ref5.progressIdentifier,
+        percentage = _ref5.percentage;
+    state.progresses = state.progresses.map(function (prog) {
+      return prog.identifier === progressIdentifier ? _objectSpread(_objectSpread({}, prog), {}, {
+        percentage: percentage
+      }) : prog;
+    });
+  },
+  clearProgress: function clearProgress(state, progressIdentifier) {
+    state.progresses = state.progresses.filter(function (prog) {
+      return prog.identifier !== progressIdentifier;
     });
   },
   setLoading: function setLoading(state, method) {
@@ -63959,447 +64100,503 @@ var render = function() {
           "div",
           {
             staticClass: "card",
-            class: [
-              _vm.postIsLoading || !_vm.$gate.can("shop") ? "div-disabled" : ""
-            ]
+            class: [_vm.postIsLoading ? "div-disabled" : ""]
           },
           [
-            _c("div", { staticClass: "card-body" }, [
-              !_vm.$gate.can("shop")
-                ? _c(
-                    "div",
-                    {
-                      staticClass: "w-100",
-                      staticStyle: {
-                        position: "absolute",
-                        top: "35%",
-                        left: "42%",
-                        "z-index": "1000"
-                      }
-                    },
-                    [_vm._m(0)]
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.postIsLoading
-                ? _c(
-                    "div",
-                    {
-                      staticClass: "w-100",
-                      staticStyle: {
-                        position: "absolute",
-                        top: "20%",
-                        left: "45%",
-                        "z-index": "10000"
-                      }
-                    },
-                    [
-                      _c("vue-loaders-ball-scale-ripple-multiple", {
-                        attrs: { color: "#2B51C4", scale: "1" }
-                      })
-                    ],
-                    1
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              _c("div", [
-                _c(
-                  "div",
-                  {
-                    staticClass: "pt-4 wish-list has-cool-scrollbar",
-                    attrs: { id: "cartContentWrapper" }
-                  },
-                  [
-                    _c("h5", { staticClass: "mb-4" }, [
-                      _vm._v(
-                        "\n            " +
-                          _vm._s(_vm.translate("front.yourCart")) +
-                          " (" +
-                          _vm._s(_vm.cartObject.count) +
-                          ")\n          "
+            _vm.$gate.can("shop")
+              ? _c("div", { staticClass: "card-body" }, [
+                  _vm.postIsLoading
+                    ? _c(
+                        "div",
+                        {
+                          staticClass: "w-100",
+                          staticStyle: {
+                            position: "absolute",
+                            top: "20%",
+                            left: "45%",
+                            "z-index": "10000"
+                          }
+                        },
+                        [
+                          _c("vue-loaders-ball-scale-ripple-multiple", {
+                            attrs: { color: "#2B51C4", scale: "1" }
+                          })
+                        ],
+                        1
                       )
-                    ]),
-                    _vm._v(" "),
-                    _vm.cartObject.count
-                      ? _c(
-                          "div",
-                          [
-                            _vm._l(_vm.cartObject.content, function(item) {
-                              return _c(
-                                "div",
-                                { key: item.rowId, staticClass: "row mb-4" },
-                                [
-                                  _c("div", { staticClass: "col-md-2" }, [
-                                    _c(
-                                      "div",
-                                      {
-                                        staticClass:
-                                          "view zoom overlay z-depth-1 rounded mb-3 mb-md-0"
-                                      },
-                                      [
-                                        _c("img", {
-                                          staticClass: "img-fluid w-100",
-                                          staticStyle: {
-                                            "max-height": "100px",
-                                            "max-width": "100px"
-                                          },
-                                          attrs: {
-                                            src: item.model.resizedImage,
-                                            alt: "Sample"
-                                          }
-                                        })
-                                      ]
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass: "col-md-7 col-lg-9 col-xl-9",
-                                      staticStyle: { width: "100% !important" }
-                                    },
-                                    [
-                                      _c("div", [
-                                        _c("div", { staticClass: "d-flex" }, [
-                                          _c(
-                                            "div",
-                                            { staticStyle: { width: "65%" } },
-                                            [
-                                              _c("h5", [
-                                                _vm._v(_vm._s(item.name))
-                                              ]),
-                                              _vm._v(" "),
-                                              _c("p", {
-                                                staticClass:
-                                                  "text-muted text-uppercase small",
-                                                domProps: {
-                                                  innerHTML: _vm._s(
-                                                    item.options
-                                                      .user_selected_options
-                                                  )
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c(
-                                                "a",
-                                                {
-                                                  staticClass:
-                                                    "text-danger text-small",
-                                                  attrs: { href: "#" },
-                                                  on: {
-                                                    click: function($event) {
-                                                      $event.preventDefault()
-                                                      return _vm.deleteFromCart(
-                                                        item.rowId
-                                                      )
-                                                    }
-                                                  }
-                                                },
-                                                [
-                                                  _c("i", {
-                                                    staticClass: "fa fa-times"
-                                                  }),
-                                                  _vm._v(
-                                                    "\n                        " +
-                                                      _vm._s(
-                                                        _vm.translate(
-                                                          "front.delete"
-                                                        )
-                                                      ) +
-                                                      "\n                      "
-                                                  )
-                                                ]
-                                              )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "div",
-                                            {
-                                              staticClass: "ml-auto",
-                                              staticStyle: {
-                                                position: "relative"
-                                              }
-                                            },
-                                            [
-                                              _c("span", [
-                                                _c(
-                                                  "a",
-                                                  {
-                                                    staticClass:
-                                                      "btn-outline-orange",
-                                                    staticStyle: {
-                                                      padding: "5px 7px"
-                                                    },
-                                                    attrs: { href: "#" },
-                                                    on: {
-                                                      click: function($event) {
-                                                        $event.preventDefault()
-                                                        return _vm.updateCart({
-                                                          rowId: item.rowId,
-                                                          qty: item.qty - 1
-                                                        })
-                                                      }
-                                                    }
-                                                  },
-                                                  [
-                                                    _c("i", {
-                                                      staticClass: "fa fa-minus"
-                                                    })
-                                                  ]
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "span",
-                                                  {
-                                                    staticStyle: {
-                                                      margin: "0px 1px"
-                                                    }
-                                                  },
-                                                  [_vm._v(_vm._s(item.qty))]
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "a",
-                                                  {
-                                                    staticClass:
-                                                      "btn-outline-orange",
-                                                    staticStyle: {
-                                                      padding: "5px 7px"
-                                                    },
-                                                    attrs: { href: "#" },
-                                                    on: {
-                                                      click: function($event) {
-                                                        $event.preventDefault()
-                                                        return _vm.updateCart({
-                                                          rowId: item.rowId,
-                                                          qty: item.qty + 1
-                                                        })
-                                                      }
-                                                    }
-                                                  },
-                                                  [
-                                                    _c("i", {
-                                                      staticClass: "fa fa-plus"
-                                                    })
-                                                  ]
-                                                )
-                                              ]),
-                                              _vm._v(" "),
-                                              _c(
-                                                "p",
-                                                { staticClass: "ml-2 mt-3" },
-                                                [
-                                                  _c(
-                                                    "span",
-                                                    {
-                                                      staticClass:
-                                                        "text-success"
-                                                    },
-                                                    [
-                                                      _c("strong", [
-                                                        _vm._v(
-                                                          _vm._s(
-                                                            item.price *
-                                                              item.qty
-                                                          ) + " dhs"
-                                                        )
-                                                      ])
-                                                    ]
-                                                  )
-                                                ]
-                                              )
-                                            ]
-                                          )
-                                        ])
-                                      ])
-                                    ]
-                                  )
-                                ]
-                              )
-                            }),
-                            _vm._v(" "),
-                            _c("p", { staticClass: "text-primary mb-3" }, [
-                              _c("i", {
-                                staticClass: "fas fa-info-circle mr-1"
-                              }),
-                              _vm._v(
-                                "\n              " +
-                                  _vm._s(_vm.translate("front.dontDelay")) +
-                                  ".\n            "
-                              )
-                            ])
-                          ],
-                          2
-                        )
-                      : _c(
-                          "div",
-                          {
-                            staticClass:
-                              "text-center mt-4 mb-4 alert alert-warning",
-                            staticStyle: { background: "#cda45e" }
-                          },
-                          [
-                            _c("i", {
-                              staticClass:
-                                "fa fa-utensils fa-2x text-white mb-3"
-                            }),
-                            _vm._v(" "),
-                            _c("h4", [
-                              _vm._v(
-                                _vm._s(_vm.translate("front.cartEmpty")) + "."
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("h6", { staticClass: "text-small" }, [
-                              _vm._v(
-                                "\n              " +
-                                  _vm._s(_vm.translate("front.cartEmptyText")) +
-                                  "\n            "
-                              )
-                            ])
-                          ]
-                        )
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticStyle: {
-                    "z-index": "1000000000000",
-                    "box-shadow": "0 -5px 5px -5px rgba(32, 32, 32, 0.568)"
-                  }
-                },
-                [
-                  _vm.$gate.can("checkout-with-stripe")
-                    ? _c("div", { staticClass: "mb-3" }, [_vm._m(1)])
                     : _vm._e(),
                   _vm._v(" "),
-                  _c("div", { staticClass: "mb-3" }, [
-                    _c("div", { staticClass: "pt-1" }, [
-                      _c("ul", { staticClass: "list-group list-group-flush" }, [
-                        _c(
-                          "li",
-                          {
-                            staticClass:
-                              "list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0"
-                          },
-                          [
-                            _vm._v(
-                              "\n                " +
-                                _vm._s(_vm.translate("front.total")) +
-                                "\n                "
-                            ),
-                            _c("span", [
-                              _vm._v(_vm._s(_vm.cartObject.total) + " dhs")
-                            ])
-                          ]
-                        ),
+                  _c("div", [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "pt-4 wish-list has-cool-scrollbar",
+                        attrs: { id: "cartContentWrapper" }
+                      },
+                      [
+                        _c("h5", { staticClass: "mb-4" }, [
+                          _vm._v(
+                            "\n            " +
+                              _vm._s(_vm.translate("front.yourCart")) +
+                              " (" +
+                              _vm._s(_vm.cartObject.count) +
+                              ")\n          "
+                          )
+                        ]),
                         _vm._v(" "),
-                        _c(
-                          "li",
-                          {
-                            staticClass:
-                              "list-group-item d-flex justify-content-between align-items-center px-0 border-0 pb-0"
-                          },
-                          [
-                            _vm._v(
-                              "\n                " +
-                                _vm._s(_vm.translate("front.delivery")) +
-                                "\n                "
-                            ),
-                            _c("span", [
-                              _vm._v(_vm._s(_vm.deliveryPrice) + " dhs")
-                            ])
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "li",
-                          {
-                            staticClass:
-                              "list-group-item d-flex justify-content-between align-items-center px-0 border-0 pb-0"
-                          },
-                          [
-                            _vm._v(
-                              "\n                " +
-                                _vm._s(_vm.translate("front.delivery")) +
-                                "\n                " +
-                                _vm._s(_vm.translate("admin.time")) +
-                                "\n                "
-                            ),
-                            _c("span", [
-                              _vm._v(_vm._s(_vm.deliveryTime) + " mintues")
-                            ])
-                          ]
-                        ),
-                        _vm._v(" "),
-                        !_vm.$gate.can("checkout", {
-                          cartObject: _vm.cartObject,
-                          minOrderPrice: _vm.minOrderPrice
-                        })
+                        _vm.cartObject.count
                           ? _c(
-                              "li",
+                              "div",
+                              [
+                                _vm._l(_vm.cartObject.content, function(item) {
+                                  return _c(
+                                    "div",
+                                    {
+                                      key: item.rowId,
+                                      staticClass: "row mb-4"
+                                    },
+                                    [
+                                      _c("div", { staticClass: "col-md-2" }, [
+                                        _c(
+                                          "div",
+                                          {
+                                            staticClass:
+                                              "view zoom overlay z-depth-1 rounded mb-3 mb-md-0"
+                                          },
+                                          [
+                                            _c("img", {
+                                              staticClass: "img-fluid w-100",
+                                              staticStyle: {
+                                                "max-height": "100px",
+                                                "max-width": "100px"
+                                              },
+                                              attrs: {
+                                                src: item.model.resized_image,
+                                                alt: "Sample"
+                                              }
+                                            })
+                                          ]
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass:
+                                            "col-md-7 col-lg-9 col-xl-9",
+                                          staticStyle: {
+                                            width: "100% !important"
+                                          }
+                                        },
+                                        [
+                                          _c("div", [
+                                            _c(
+                                              "div",
+                                              { staticClass: "d-flex" },
+                                              [
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticStyle: {
+                                                      width: "65%"
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("h5", [
+                                                      _vm._v(_vm._s(item.name))
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    _c("p", {
+                                                      staticClass:
+                                                        "text-muted text-uppercase small",
+                                                      domProps: {
+                                                        innerHTML: _vm._s(
+                                                          item.options
+                                                            .user_selected_options
+                                                        )
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "a",
+                                                      {
+                                                        staticClass:
+                                                          "text-danger text-small",
+                                                        attrs: { href: "#" },
+                                                        on: {
+                                                          click: function(
+                                                            $event
+                                                          ) {
+                                                            $event.preventDefault()
+                                                            return _vm.deleteFromCart(
+                                                              item.rowId
+                                                            )
+                                                          }
+                                                        }
+                                                      },
+                                                      [
+                                                        _c("i", {
+                                                          staticClass:
+                                                            "fa fa-times"
+                                                        }),
+                                                        _vm._v(
+                                                          "\n                        " +
+                                                            _vm._s(
+                                                              _vm.translate(
+                                                                "front.delete"
+                                                              )
+                                                            ) +
+                                                            "\n                      "
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass: "ml-auto",
+                                                    staticStyle: {
+                                                      position: "relative"
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("span", [
+                                                      _c(
+                                                        "a",
+                                                        {
+                                                          staticClass:
+                                                            "btn-outline-orange",
+                                                          staticStyle: {
+                                                            padding: "5px 7px"
+                                                          },
+                                                          attrs: { href: "#" },
+                                                          on: {
+                                                            click: function(
+                                                              $event
+                                                            ) {
+                                                              $event.preventDefault()
+                                                              return _vm.updateCart(
+                                                                {
+                                                                  rowId:
+                                                                    item.rowId,
+                                                                  qty:
+                                                                    item.qty - 1
+                                                                }
+                                                              )
+                                                            }
+                                                          }
+                                                        },
+                                                        [
+                                                          _c("i", {
+                                                            staticClass:
+                                                              "fa fa-minus"
+                                                          })
+                                                        ]
+                                                      ),
+                                                      _vm._v(" "),
+                                                      _c(
+                                                        "span",
+                                                        {
+                                                          staticStyle: {
+                                                            margin: "0px 1px"
+                                                          }
+                                                        },
+                                                        [
+                                                          _vm._v(
+                                                            _vm._s(item.qty)
+                                                          )
+                                                        ]
+                                                      ),
+                                                      _vm._v(" "),
+                                                      _c(
+                                                        "a",
+                                                        {
+                                                          staticClass:
+                                                            "btn-outline-orange",
+                                                          staticStyle: {
+                                                            padding: "5px 7px"
+                                                          },
+                                                          attrs: { href: "#" },
+                                                          on: {
+                                                            click: function(
+                                                              $event
+                                                            ) {
+                                                              $event.preventDefault()
+                                                              return _vm.updateCart(
+                                                                {
+                                                                  rowId:
+                                                                    item.rowId,
+                                                                  qty:
+                                                                    item.qty + 1
+                                                                }
+                                                              )
+                                                            }
+                                                          }
+                                                        },
+                                                        [
+                                                          _c("i", {
+                                                            staticClass:
+                                                              "fa fa-plus"
+                                                          })
+                                                        ]
+                                                      )
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "p",
+                                                      {
+                                                        staticClass: "ml-2 mt-3"
+                                                      },
+                                                      [
+                                                        _c(
+                                                          "span",
+                                                          {
+                                                            staticClass:
+                                                              "text-success"
+                                                          },
+                                                          [
+                                                            _c("strong", [
+                                                              _vm._v(
+                                                                _vm._s(
+                                                                  item.price *
+                                                                    item.qty
+                                                                ) + " dhs"
+                                                              )
+                                                            ])
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              ]
+                                            )
+                                          ])
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                }),
+                                _vm._v(" "),
+                                _c("p", { staticClass: "text-primary mb-3" }, [
+                                  _c("i", {
+                                    staticClass: "fas fa-info-circle mr-1"
+                                  }),
+                                  _vm._v(
+                                    "\n              " +
+                                      _vm._s(_vm.translate("front.dontDelay")) +
+                                      ".\n            "
+                                  )
+                                ])
+                              ],
+                              2
+                            )
+                          : _c(
+                              "div",
                               {
                                 staticClass:
-                                  "list-group-item text-danger font-weight-bold d-flex justify-content-between align-items-center px-0"
+                                  "text-center mt-4 mb-4 alert alert-warning"
                               },
                               [
-                                _vm._v(
-                                  "\n                " +
-                                    _vm._s(
-                                      _vm.translate("admin.min_order_price")
-                                    ) +
-                                    "\n\n                "
-                                ),
-                                _c("span", [
-                                  _vm._v(_vm._s(_vm.minOrderPrice) + " dhs")
+                                _c("i", {
+                                  staticClass:
+                                    "fa fa-utensils fa-2x text-white mb-3"
+                                }),
+                                _vm._v(" "),
+                                _c("h4", [
+                                  _vm._v(
+                                    _vm._s(_vm.translate("front.cartEmpty")) +
+                                      "."
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("h6", { staticClass: "text-small" }, [
+                                  _vm._v(
+                                    "\n              " +
+                                      _vm._s(
+                                        _vm.translate("front.cartEmptyText")
+                                      ) +
+                                      "\n            "
+                                  )
                                 ])
                               ]
                             )
-                          : _vm._e()
-                      ]),
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticStyle: {
+                        "z-index": "1000000000000",
+                        "box-shadow": "0 -5px 5px -5px rgba(32, 32, 32, 0.568)"
+                      }
+                    },
+                    [
+                      _vm.$gate.can("checkout-with-stripe")
+                        ? _c("div", { staticClass: "mb-3" }, [_vm._m(0)])
+                        : _vm._e(),
                       _vm._v(" "),
-                      _vm.$gate.can("checkout", {
-                        cartObject: _vm.cartObject,
-                        minOrderPrice: _vm.minOrderPrice
-                      })
-                        ? _c(
-                            "a",
-                            {
-                              staticClass:
-                                "btn btn-success btn-square btn-block btn-lg mt-2",
-                              attrs: { href: "/checkout" }
-                            },
+                      _c("div", { staticClass: "mb-3" }, [
+                        _c("div", { staticClass: "pt-1" }, [
+                          _c(
+                            "ul",
+                            { staticClass: "list-group list-group-flush" },
                             [
-                              _vm._v(
-                                "\n              " +
-                                  _vm._s(_vm.translate("front.checkout")) +
-                                  "\n            "
-                              )
+                              _c(
+                                "li",
+                                {
+                                  staticClass:
+                                    "\n                  list-group-item\n                  d-flex\n                  justify-content-between\n                  align-items-center\n                  border-0\n                  px-0\n                  pb-0\n                "
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                " +
+                                      _vm._s(_vm.translate("front.total")) +
+                                      "\n                "
+                                  ),
+                                  _c("span", [
+                                    _vm._v(
+                                      _vm._s(_vm.cartObject.total) + " dhs"
+                                    )
+                                  ])
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "li",
+                                {
+                                  staticClass:
+                                    "\n                  list-group-item\n                  d-flex\n                  justify-content-between\n                  align-items-center\n                  px-0\n                  border-0\n                  pb-0\n                "
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                " +
+                                      _vm._s(_vm.translate("front.delivery")) +
+                                      "\n                "
+                                  ),
+                                  _c("span", [
+                                    _vm._v(_vm._s(_vm.deliveryPrice) + " dhs")
+                                  ])
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "li",
+                                {
+                                  staticClass:
+                                    "\n                  list-group-item\n                  d-flex\n                  justify-content-between\n                  align-items-center\n                  px-0\n                  border-0\n                  pb-0\n                "
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                " +
+                                      _vm._s(_vm.translate("front.delivery")) +
+                                      "\n                " +
+                                      _vm._s(_vm.translate("admin.time")) +
+                                      "\n                "
+                                  ),
+                                  _c("span", [
+                                    _vm._v(
+                                      _vm._s(_vm.deliveryTime) + " mintues"
+                                    )
+                                  ])
+                                ]
+                              ),
+                              _vm._v(" "),
+                              !_vm.$gate.can("checkout", {
+                                cartObject: _vm.cartObject,
+                                minOrderPrice: _vm.minOrderPrice
+                              })
+                                ? _c(
+                                    "li",
+                                    {
+                                      staticClass:
+                                        "\n                  list-group-item\n                  text-danger\n                  font-weight-bold\n                  d-flex\n                  justify-content-between\n                  align-items-center\n                  px-0\n                "
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                " +
+                                          _vm._s(
+                                            _vm.translate(
+                                              "admin.min_order_price"
+                                            )
+                                          ) +
+                                          "\n\n                "
+                                      ),
+                                      _c("span", [
+                                        _vm._v(
+                                          _vm._s(_vm.minOrderPrice) + " dhs"
+                                        )
+                                      ])
+                                    ]
+                                  )
+                                : _vm._e()
                             ]
-                          )
-                        : _vm._e()
-                    ])
-                  ])
-                ]
-              )
-            ])
+                          ),
+                          _vm._v(" "),
+                          _vm.$gate.can("checkout", {
+                            cartObject: _vm.cartObject,
+                            minOrderPrice: _vm.minOrderPrice
+                          })
+                            ? _c(
+                                "a",
+                                {
+                                  staticClass:
+                                    "btn-orange text-center btn-square btn-block mt-2",
+                                  attrs: { href: "/checkout" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n              " +
+                                      _vm._s(_vm.translate("front.checkout")) +
+                                      "\n            "
+                                  )
+                                ]
+                              )
+                            : _vm._e()
+                        ])
+                      ])
+                    ]
+                  )
+                ])
+              : _c("div", { staticClass: "card-body" }, [
+                  _c("h5", { staticClass: "mb-4" }, [
+                    _vm._v(
+                      "\n        " +
+                        _vm._s(_vm.translate("front.yourCart")) +
+                        "\n      "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "text-center",
+                      staticStyle: { position: "relative" }
+                    },
+                    [
+                      _c("img", {
+                        staticClass: "img-fluid",
+                        attrs: {
+                          src: "/storage/images/design/cart-closed.svg",
+                          alt: "Fermé temporairement"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("h2", [
+                        _vm._v(_vm._s(_vm.translate("front.closedNow")))
+                      ])
+                    ]
+                  )
+                ])
           ]
         )
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("h4", { staticClass: "text-dark" }, [
-      _c("i", { staticClass: "fa fa-ban fa-4x text-danger" })
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -84784,7 +84981,7 @@ var index = {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"en":{"admin":{"adminPanel":"Admin Panel","overview":"Overview","dashboard":"Dashboard","management":"Management","users":"Users","categories":"Categories","extras":"Extras","options":"Options","menus":"Menus","account":"Account","profile":"Profile","logout":"Log Out","delete":"Delete","add":"Add","new":"New","save":"Save","edit":"Edit","discard":"Discard","enter":"Enter","select":"Select","the":"The","theFem":"The","user":"User","category":"Category","extra":"Extra","option":"Option","menu":"Menu","generalInfo":"General Info","canManage":"is able to manage the site data","optional":"Optional","optionalFem":"Optional","to":"To","for":"For","this":"This","thisFem":"This","name":"Name","phone":"Phone","address":"Address","joinedAt":"Joined at","createdAt":"Created at","title":"Title","price":"Price","active":"Active","selectToAdd":"Select to Add","noExtras":"There are no Extras .","next":"Next","previous":"Prev","newOptions":"NEW OPTIONS","oldOptions":"OLD OPTIONS","confirmationTitle":"are you sure ?","confirmationText":"You won\'t be able to revert this","confirmationConfirm":"Yes, do it","settings":"Settings","orders":"Orders","general":"General","cart":"Cart","appNameDesc":"used for branding and emails","time":"Estimated time","tax":"Tax Rate","created":":item created successfully","updated":":item updated successfully","deleted":":item deleted successfully","bulkDeleted":"Selected item(s) deleted successfully","openingHours":"Opening Hours","addOpeningHours":"Add your business hours","splitHours":"Split hours","closed":"Closed","setAsClosed":"Set as Closed","monday":"monday","tuesday":"tuesday","wednesday":"Wednesday","thursday":"thursday","friday":"friday","saturday":"saturday","sunday":"sunday","forcedClose":"Forced Close","forcedCloseText":"this option will override the schedule and force close the restaurant","selectPolygon":"Select a polygon","noCategoryForMeal":"There is no category for the menu . it might have been deleted","min_order_price":"Minimum order price","nameOnCard":"Name on card","paymentDetails":"Payment Details","cashOnDeliveryText":"You will pay cash once the products are delivered","paymentMode":"Payment Mode","status":"Status","passedAt":"Passed at","orderDetails":"Order details","order":"Order","noUserForOrder":"No user in the database for this order . he might have been deleted","filterBy":"Filter by","pending":"Pending","processing":"Processing","out_for_delivery":"Out for Delivery","delivered":"Delivered","cancelled":"Cancelled","failed":"Failed","charge":"Charge","clientCharged":"Client charged","failure":"Failure","roles":"Roles","admin":"Admin","deliveryman":"Delivery man","client":"Client","print":"Print","invoice":"Invoice","track":"Track Order","paymentSuccessful":"Payment was successful","refund":"Refund","clientRefunded":"Client Refunded","onlinePayment":"Online Payment","refundSuccessful":"Refund was successful","subtotal":"Subtotal","from":"From","quantity":"Quantity","deliverymanRequired":"A delivery man is required for out for delivery and delivered statuses","manageProfile":"Manage Your Profile","orderCreated":"New Order has been placed. #:orderId","deliverymanSelected":"You have been selected to deliver order #:orderId","orderStatusChanged":"Your order #:orderId is :orderStatus","paymentConfirmationRequired":"Payment confirmation required for order #:orderId","userCharged":"You were charged :orderTotal dhs for order #:orderId","userRefunded":":orderTotal dhs has been refunded regarding order #:orderId","paymentConfirmationObtained":"Payment confirmation obtained for order #:orderId","clientCancelledOrder":"Order #:orderId has been cancelled by the client for delay reasons","noNotifications":"You\'re all caught up","notificationsCenter":"Notifications center","paymentRequiredConfirmation":"This order payment required confirmation from the client\'s bank","monthlySales":"Monthly Sales","monthlyUsers":"Monthly Users","monthlySalesText":"report of sales by month","monthlyUsersText":"report of users registration by month","registrations":"Registrations","revenue":"Revenue","monthlyRevenue":"Monthly Revenue","monthlyRevenueText":"report of revenue by month","latestOrder":"for the latest order","latestUser":"for the latest registration","noRevenuHistory":"does not include deleted history","promoteApp":"promote the app","addMoreMenus":"add more menus","checkPendingOrders":"check for pending orders","latestUsers":"Latest Users","manageTheirData":"Manage their data","search":"Search ...","notFound":"Resource not found","forbidden":"Action is unauthorized","lostText":"It looks like you\'re lost ...","goHome":"Go home","noInternet":"No Internet connection","notConnected":"Your are offline","notConnectedText":"And :appName isn\'t the same without you . let\'s get you back online!","try":"Try","checkCables":"Checking your network cables, modems and routers","checkNetwork":"Reconnecting to your wireless network","refreshPage":"Refresh the page","cancelOrder":"Cancel the order","cancelledSuccessfully":"Order cancelled successfully","cancelOrderGuide":"You can cancel if the status is still pending after 5 minutes since you placed the order","setHours":"Set the Hours","payment":"Payment","stripeEnabled":"Stripe Enabled","warning":"Warning","stripeWarning":"If those keys are not valid stripe keys. every interaction with stripe would fail .and the user would get a 500 server error . we suggest you put the right keys"},"auth":{"failed":"These credentials do not match our records.","password":"The provided password is incorrect.","throttle":"Too many login attempts. Please try again in :seconds seconds."},"front":{"searchTitle":"Customize the search","search":"Search","categories":"Categories","filters":"Filters","all":"All","allFem":"All","category":"Category","addToCart":"Add","noMeals":"Sorry! There are no menus available","noMealsText":"we suggest to modify the search","noDescription":"Description not Available","noOption":"No Thank you","unavailable":"Not Available","customize":"Customize Your","yourCart":"Your Cart","delete":"Remove","cartEmpty":"Your cart is empty","cartEmptyText":"Buy a delicious meal before it gets cold","weAccept":"We accept","total":"Total with taxes","delivery":"Delivery","checkout":"Go to Checkout","dontDelay":"Don\'t delay the purchase,\\r\\n    adding items to your cart does not mean\\r\\n    Reserving them","successMessage":"Menu added to your cart","errorMessage":"an Error ocurred . Try again","and":"and","chooseAddress":"Choose your Address","chooseAddressText":"Choose your Address from the map or detect browser location","addressDetails":"Details (ex : Floor , House)","geolocationNotSupported":"Your Browser does not support Geolocation .Please enter your address Manually","permissionDenied":"You denied the Permission . Please add your address manually","add":"Add","addressAdded":"Address added successfully","noAddress":"No address available","outOfDeliveryZone":"Our of delivery zone","addressDirections":"Address Directions","detectAddresses":"Detect Addresses Automatically","toggleInstructions":"Toggle Instructions"},"pagination":{"previous":"&laquo; Previous","next":"Next &raquo;"},"passwords":{"reset":"Your password has been reset!","sent":"We have emailed your password reset link!","throttled":"Please wait before retrying.","token":"This password reset token is invalid.","user":"We can\'t find a user with that email address."},"validation":{"accepted":" :attribute must be accepted.","active_url":" :attribute is not a valid URL.","after":" :attribute must be a date after :date.","after_or_equal":" :attribute must be a date after or equal to :date.","alpha":" :attribute must only contain letters.","alpha_dash":" :attribute must only contain letters, numbers, dashes and underscores.","alpha_num":" :attribute must only contain letters and numbers.","array":" :attribute must be an array.","before":" :attribute must be a date before :date.","before_or_equal":" :attribute must be a date before or equal to :date.","between":{"numeric":" :attribute must be between :min and :max.","file":" :attribute must be between :min and :max kilobytes.","string":" :attribute must be between :min and :max characters.","array":" :attribute must have between :min and :max items."},"boolean":" :attribute must be true or false.","confirmed":" :attribute confirmation does not match.","date":" :attribute is not a valid date.","date_equals":" :attribute must be a date equal to :date.","date_format":" :attribute does not match the format :format.","different":" :attribute and :other must be different.","digits":" :attribute must be :digits digits.","digits_between":" :attribute must be between :min and :max digits.","dimensions":" :attribute has invalid image dimensions.","distinct":" :attribute has a duplicate value.","email":" :attribute must be a valid email address.","ends_with":" :attribute must end with one of the following: :values.","exists":" selected :attribute is invalid.","file":" :attribute must be a file.","filled":" :attribute must have a value.","gt":{"numeric":" :attribute must be greater than :value.","file":" :attribute must be greater than :value kilobytes.","string":" :attribute must be greater than :value characters.","array":" :attribute must have more than :value items."},"gte":{"numeric":" :attribute must be greater than or equal :value.","file":" :attribute must be greater than or equal :value kilobytes.","string":" :attribute must be greater than or equal :value characters.","array":" :attribute must have :value items or more."},"image":" :attribute must be an image.","in":" selected :attribute is invalid.","in_array":" :attribute does not exist in :other.","integer":" :attribute must be an integer.","ip":" :attribute must be a valid IP address.","ipv4":" :attribute must be a valid IPv4 address.","ipv6":" :attribute must be a valid IPv6 address.","json":" :attribute must be a valid JSON string.","lt":{"numeric":" :attribute must be less than :value.","file":" :attribute must be less than :value kilobytes.","string":" :attribute must be less than :value characters.","array":" :attribute must have less than :value items."},"lte":{"numeric":" :attribute must be less than or equal :value.","file":" :attribute must be less than or equal :value kilobytes.","string":" :attribute must be less than or equal :value characters.","array":" :attribute must not have more than :value items."},"max":{"numeric":" :attribute must not be greater than :max.","file":" :attribute must not be greater than :max kilobytes.","string":" :attribute must not be greater than :max characters.","array":" :attribute must not have more than :max items."},"mimes":" :attribute must be a file of type: :values.","mimetypes":" :attribute must be a file of type: :values.","min":{"numeric":" :attribute must be at least :min.","file":" :attribute must be at least :min kilobytes.","string":" :attribute must be at least :min characters.","array":" :attribute must have at least :min items."},"multiple_of":" :attribute must be a multiple of :value.","not_in":" selected :attribute is invalid.","not_regex":" :attribute format is invalid.","numeric":" :attribute must be a number.","password":" password is incorrect.","present":" :attribute must be present.","regex":" :attribute format is invalid.","required":" :attribute is required.","required_if":" :attribute is required when :other is :value.","required_unless":" :attribute is required unless :other is in :values.","required_with":" :attribute is required when :values is present.","required_with_all":" :attribute is required when :values are present.","required_without":" :attribute is required when :values is not present.","required_without_all":" :attribute is required when none of :values are present.","prohibited_if":" :attribute is prohibited when :other is :value.","prohibited_unless":" :attribute is prohibited unless :other is in :values.","same":" :attribute and :other must match.","size":{"numeric":" :attribute must be :size.","file":" :attribute must be :size kilobytes.","string":" :attribute must be :size characters.","array":" :attribute must contain :size items."},"starts_with":" :attribute must start with one of the following: :values.","string":" :attribute must be a string.","timezone":" :attribute must be a valid zone.","unique":" :attribute has already been taken.","uploaded":" :attribute failed to upload.","url":" :attribute format url is invalid.","uuid":" :attribute must be a valid UUID.","isBetweenTheMinAndAdminSelectedOptions":" :attribute must be between the min and selected options sum","custom":{"attribute-name":{"rule-name":"custom-message"}},"attributes":{"name":"The Name","email":"The Email","address":"The Address","phone":"The Phone number","password":"The Password","is_admin":"is Admin","slug":"The Slug","title":"The Title","price":"The Price","description":"The Description","image":"The Image","category_id":"The Category","min":"The Min","max":"The Max","time":"The Time","tax":"The Tax rate","start":"Start hour","end":"End Hour","label":"The Label","roles":"The Roles","content":"The Content","current_password":"Current Password","new_password":"New Password","new_password_confirm":"New Password Confirmation","stripeKey":"Stripe Key","stripeSecret":"Stripe Secret"}}},"fr":{"0":1,"admin":{"adminPanel":"Panneau d\'Administration","overview":"Aperçu","dashboard":"Tableau de bord","management":"Gestion","users":"Utilisateurs","categories":"Catégories","extras":"Extras","options":"Options","menus":"Menus","account":"Compte","profile":"Profil","logout":"Se déconnecter","delete":"Suppression","add":"Ajouter","new":"Nouveau","save":"Sauvgarder","edit":"Modifier","discard":"Annuler","enter":"Entrer","select":"Sélectionner","the":"Le","theFem":"La","user":"Utilisateur","category":"Catégorie","extra":"Extra","option":"Option","menu":"Menu","generalInfo":"Info générales","canManage":"peut gérer les données du site","optional":"Optionnel","optionalFem":"Optionnelle","to":"À","for":"Pour","this":"Ce","thisFem":"Cette","name":"Nom","phone":"N.Téléphone","address":"Adresse","joinedAt":"Rejoint à","createdAt":"Créé à","title":"Titre","price":"Prix","active":"Actif","selectToAdd":"sélectionner pour ajouter","noExtras":"Il n\'y a pas de Extra .","next":"Suiv","previous":"Précéd","newOptions":"NOUVELLES OPTIONS","oldOptions":"ANCIENNES OPTIONS","confirmationTitle":"êtes-vous sûr ? ","confirmationText":"Vous ne pourrez pas récupérer  cela !","confirmationConfirm":"Oui, fais-le","settings":"Paramètres","orders":"Commandes","general":"Général","cart":"Panier","appNameDesc":"utilisé pour la marque et les e-mails","time":"Temps estimé","tax":"Taux d\'imposition","created":":item ajoutée avec succès","updated":":item modifiée avec succès","deleted":":item supprimées avec succès","bulkDeleted":"Éléments sélectionné(s) supprimés avec succès","openingHours":"Heures d\'ouverture","addOpeningHours":"Ajouter vos heures d\'ouverture","splitHours":"heures fractionnées","closed":"Fermé","setAsClosed":"Définir comme fermé","monday":"lundi","tuesday":"mardi","wednesday":"mercredi","thursday":"jeudi","friday":"vendredi","saturday":"samedi","sunday":"dimanche","forcedClose":"Fermeture forcée","forcedCloseText":"cette option remplacera l\'horaire et fermera le restaurant forcément","selectPolygon":"Sélectionnez un polygone","noCategoryForMeal":"Il n\'y a pas de catégorie pour le menu. il a peut-être été supprimé","min_order_price":"Prix ​​minimum de commande","nameOnCard":"Nom sur la carte","paymentDetails":"Détails de paiement","cashOnDeliveryText":"Vous paierez en espèces une fois les produits livrés","paymentMode":"Mode de paiement","status":"Statut","passedAt":"Passé à","orderDetails":"Détails de la commande","order":"Commande","noUserForOrder":"Aucun utilisateur dans la base de données pour cette commande. il aurait pu être supprimé","filterBy":"Filtrer par","pending":"En attente","processing":"En cours","out_for_delivery":"En route","delivered":"Livré","cancelled":"Annulé","failed":"Manquée","charge":"Facturez","clientCharged":"Client facturé","failure":"Échec","roles":"Rôles","admin":"Admin","deliveryman":"Livreur","client":"Client","print":"Imprimer","invoice":"Facture","track":"Tracer Commande","paymentSuccessful":"Le paiement a réussi","refund":"Rembourser","clientRefunded":"Client remboursé","onlinePayment":"Paiement en ligne","refundSuccessful":"Le remboursement a réussi","subtotal":"Sous-total","from":"De","quantity":"Quantité","deliverymanRequired":"Un livreur est requis pour les statuts En route et Livré","manageProfile":"Gérez votre profil","orderCreated":"Une nouvelle commande a été passée. #:orderId","deliverymanSelected":"Vous avez été sélectionné pour livrer la commande #:orderId","orderStatusChanged":"Votre commande #:orderId est :orderStatus","paymentConfirmationRequired":"Confirmation de paiement requise pour la commande #:orderId","userCharged":"Vous avez été facturé :orderTotal dhs pour la commande #:orderId","userRefunded":":orderTotal dhs a été remboursé de la commande #:orderId","paymentConfirmationObtained":"Confirmation de paiement obtenue pour la commande #:orderId","clientCancelledOrder":"Commande #:orderId a été annulé par le client pour des raisons de retard","noNotifications":"Rien pour l\'instant","notificationsCenter":"Centre de notifications","ordersByMonth":"Ventes mensuelles","paymentRequiredConfirmation":"Le paiement de cette commande nécessitait une confirmation de la banque du client","monthlySales":"Ventes mensuelles","monthlyUsers":"Utilisateurs mensuels","monthlySalesText":"rapport de ventes par mois","monthlyUsersText":"rapport d\'inscription des utilisateurs par mois","registrations":"Inscriptions","revenue":"Revenu","monthlyRevenue":"Revenu mensuel","monthlyRevenueText":"rapport de revenus par mois","latestOrder":"pour la dernière commande","latestUser":"pour la dernière inscription","noRevenuHistory":"n\'inclut pas l\'historique supprimé","promoteApp":"promouvoir l\'application","addMoreMenus":"ajouter plus de menus","checkPendingOrders":"vérifier les commandes en attente","latestUsers":"Derniers utilisateurs","manageTheirData":"Gérer leurs données","search":"Recherche ...","notFound":"Ressource Introuvable","forbidden":"L\'action est Interdite","lostText":"Il semble que tu es perdu...","goHome":"Retour au tableau de bord","noInternet":"Pas de Connexion Internet","notConnected":"Tu n\'es pas Connecté","notConnectedText":"Et :appName n\'est tout simplement pas la même chose sans vous.\\r\\n    Nous allons vous ramener en ligne!","try":"Essayer","checkCables":"Vérification de vos câbles réseau, modem et routeurs","checkNetwork":"Reconnexion à votre réseau sans fil","refreshPage":"Rafraîchir la page","cancelOrder":"Annuler la commande","cancelledSuccessfully":"Commande annulée avec succès","cancelOrderGuide":"Vous pouvez annuler si le statut est toujours en attente après 5 minutes depuis que vous avez passé la commande","setHours":"Définir Les heures","payment":"Paiement","stripeEnabled":"Stripe activée","warning":"Attention","stripeWarning":"Si ces clés ne sont pas des clés de stripe valides. chaque interaction avec Stripe échouerait. et l\'utilisateur obtiendrait une erreur de serveur 500. nous vous suggérons de mettre les bonnes clés"},"auth":{"failed":"Ces identifiants ne correspondent pas à nos enregistrements.","password":"Le mot de passe fourni est incorrect.","throttle":"Tentatives de connexion trop nombreuses. Veuillez essayer de nouveau dans :seconds secondes."},"front":{"searchTitle":"Personnaliser la Recherche","search":"Rechercher","categories":"Catégories","filters":"Filtres","all":"Tous","allFem":"Toutes","category":"Catégorie","addToCart":"Ajouter","noMeals":"Pardon! Il n\'y a pas de menus disponibles","noMealsText":"nous suggérons de modifier la recherche","noDescription":"Description non disponible","noOption":"Non Merci","unavailable":"Non Disponible","customize":"Personnalisez votre","yourCart":"Votre Panier","delete":"Retirer","cartEmpty":"Votre Panier est Vide","cartEmptyText":"Achetez un délicieux repas avant qu\'il ne fasse froid","weAccept":"nous acceptons","total":"Total avec les taxes","delivery":"Livraison","checkout":"Valider La Commande","dontDelay":"Ne retardez pas l\'achat,\\r\\n    ajouter des articles à votre panier ne signifie pas les\\r\\n    réserver","successMessage":"Menu ajouté au panier","errorMessage":"Une erreur s\'est produite . Réessayer","and":"et","chooseAddress":"Choisissez votre adresse","chooseAddressText":"Choisissez votre adresse sur la carte ou détectez l\'emplacement du navigateur","addressDetails":"Détails (ex: étage, maison)","geolocationNotSupported":"Votre navigateur ne prend pas en charge la géolocalisation. Veuillez saisir votre adresse manuellement","permissionDenied":"Vous avez refusé l\'autorisation. Veuillez ajouter votre adresse manuellement","add":"Ajouter","addressAdded":"Adresse ajouté avec success","noAddress":"Aucune adresse disponible","outOfDeliveryZone":"Hors de zone de livraison","addressDirections":"Directions d\'Adresse","detectAddresses":"Détecter automatiquement les adresses","toggleInstructions":"Basculer Instructions"},"pagination":{"next":"Suivant &raquo;","previous":"&laquo; Précédent"},"passwords":{"reset":"Votre mot de passe a été réinitialisé !","sent":"Nous vous avons envoyé par email le lien de réinitialisation du mot de passe !","throttled":"Veuillez patienter avant de réessayer.","token":"Ce jeton de réinitialisation du mot de passe n\'est pas valide.","user":"Aucun utilisateur n\'a été trouvé avec cette adresse email."},"validation":{"accepted":":attribute doit être accepté.","active_url":":attribute n\'est pas une URL valide.","after":":attribute doit être une date postérieure au :date.","after_or_equal":":attribute doit être une date postérieure ou égale au :date.","alpha":":attribute doit contenir uniquement des lettres.","alpha_dash":":attribute doit contenir uniquement des lettres, des chiffres et des tirets.","alpha_num":":attribute doit contenir uniquement des chiffres et des lettres.","array":":attribute doit être un tableau.","attached":":attribute est déjà attaché(e).","before":":attribute doit être une date antérieure au :date.","before_or_equal":":attribute doit être une date antérieure ou égale au :date.","between":{"array":"tableau :attribute doit contenir entre :min et :max éléments.","file":"La taille du fichier de :attribute doit être comprise entre :min et :max kilo-octets.","numeric":"La valeur de :attribute doit être comprise entre :min et :max.","string":"texte :attribute doit contenir entre :min et :max caractères."},"boolean":":attribute doit être vrai ou faux.","confirmed":"de confirmation :attribute ne correspond pas.","date":":attribute n\'est pas une date valide.","date_equals":":attribute doit être une date égale à :date.","date_format":":attribute ne correspond pas au format :format.","different":" champs :attribute et :other doivent être différents.","digits":":attribute doit contenir :digits chiffres.","digits_between":":attribute doit contenir entre :min et :max chiffres.","dimensions":"La taille de l\'image :attribute n\'est pas conforme.","distinct":":attribute a une valeur en double.","email":":attribute doit être une adresse email valide.","ends_with":":attribute doit se terminer par une des valeurs suivantes : :values","exists":":attribute sélectionné est invalide.","file":":attribute doit être un fichier.","filled":":attribute doit avoir une valeur.","gt":{"array":"tableau :attribute doit contenir plus de :value éléments.","file":"La taille du fichier de :attribute doit être supérieure à :value kilo-octets.","numeric":"La valeur de :attribute doit être supérieure à :value.","string":"texte :attribute doit contenir plus de :value caractères."},"gte":{"array":"tableau :attribute doit contenir au moins :value éléments.","file":"La taille du fichier de :attribute doit être supérieure ou égale à :value kilo-octets.","numeric":"La valeur de :attribute doit être supérieure ou égale à :value.","string":"texte :attribute doit contenir au moins :value caractères."},"image":":attribute doit être une image.","in":":attribute est invalide.","in_array":":attribute n\'existe pas dans :other.","integer":":attribute doit être un entier.","ip":":attribute doit être une adresse IP valide.","ipv4":":attribute doit être une adresse IPv4 valide.","ipv6":":attribute doit être une adresse IPv6 valide.","json":":attribute doit être un document JSON valide.","lt":{"array":"tableau :attribute doit contenir moins de :value éléments.","file":"La taille du fichier de :attribute doit être inférieure à :value kilo-octets.","numeric":"La valeur de :attribute doit être inférieure à :value.","string":"texte :attribute doit contenir moins de :value caractères."},"lte":{"array":"tableau :attribute doit contenir au plus :value éléments.","file":"La taille du fichier de :attribute doit être inférieure ou égale à :value kilo-octets.","numeric":"La valeur de :attribute doit être inférieure ou égale à :value.","string":"texte :attribute doit contenir au plus :value caractères."},"max":{"array":"tableau :attribute ne peut contenir plus de :max éléments.","file":"La taille du fichier de :attribute ne peut pas dépasser :max kilo-octets.","numeric":"La valeur de :attribute ne peut être supérieure à :max.","string":"texte de :attribute ne peut contenir plus de :max caractères."},"mimes":":attribute doit être un fichier de type : :values.","mimetypes":":attribute doit être un fichier de type : :values.","min":{"array":"tableau :attribute doit contenir au moins :min éléments.","file":"La taille du fichier de :attribute doit être supérieure à :min kilo-octets.","numeric":"La valeur de :attribute doit être supérieure ou égale à :min.","string":"texte :attribute doit contenir au moins :min caractères."},"multiple_of":"La valeur de :attribute doit être un multiple de :value","not_in":":attribute sélectionné n\'est pas valide.","not_regex":"format du :attribute n\'est pas valide.","numeric":":attribute doit contenir un nombre.","password":"mot de passe est incorrect","present":":attribute doit être présent.","prohibited":":attribute est interdit.","prohibited_if":":attribute est interdit quand :other a la valeur :value.","prohibited_unless":":attribute est interdit à moins que :other est l\'une des valeurs :values.","regex":"format du :attribute est invalide.","relatable":":attribute n\'est sans doute pas associé(e) avec cette donnée.","required":":attribute est obligatoire.","required_if":":attribute est obligatoire quand la valeur de :other est :value.","required_unless":":attribute est obligatoire sauf si :other est :values.","required_with":":attribute est obligatoire quand :values est présent.","required_with_all":":attribute est obligatoire quand :values sont présents.","required_without":":attribute est obligatoire quand :values n\'est pas présent.","required_without_all":":attribute est requis quand aucun de :values n\'est présent.","same":" champs :attribute et :other doivent être identiques.","size":{"array":"tableau :attribute doit contenir :size éléments.","file":"La taille du fichier de :attribute doit être de :size kilo-octets.","numeric":"La valeur de :attribute doit être :size.","string":"texte de :attribute doit contenir :size caractères."},"starts_with":":attribute doit commencer avec une des valeurs suivantes : :values","string":":attribute doit être une chaîne de caractères.","timezone":":attribute doit être un fuseau horaire valide.","unique":"La valeur du :attribute est déjà utilisée.","uploaded":"fichier du :attribute n\'a pu être téléversé.","url":"format de l\'URL de :attribute n\'est pas valide.","uuid":":attribute doit être un UUID valide","isBetweenTheMinAndAdminSelectedOptions":":attribute doit être compris entre le min et la somme des options","custom":{"attribute-name":{"rule-name":"custom-message"}},"attributes":{"name":"Le Nom","email":"l\'Email","address":"l\'Adresse","phone":"Le Numéro de Téléphone","password":"Le Mot de passe","is_admin":"Est Admin","slug":"Le Slug","title":"Le Titre","price":"Le Prix","description":"La Description","image":"l\'Image","category_id":"La Catégorie","min":"Le Min","max":"Le Max","time":"Le Temps","tax":"Le Taux d\'imposition","start":"Heure de début","end":"Heure de fin","label":"Le Label","roles":"Les Rôles","content":"Le Contenu","current_password":"Mot de passe actuel","new_password":"nouveau mot de passe","new_password_confirm":"Confirmation nouveau mot de passe","stripeKey":"Stripe Key","stripeSecret":"Stripe Secret"}}}}');
+module.exports = JSON.parse('{"en":{"admin":{"adminPanel":"Admin Panel","overview":"Overview","dashboard":"Dashboard","management":"Management","users":"Users","categories":"Categories","extras":"Extras","options":"Options","menus":"Menus","account":"Account","profile":"Profile","logout":"Log Out","delete":"Delete","add":"Add","new":"New","save":"Save","edit":"Edit","discard":"Back","enter":"Enter","select":"Select","the":"The","theFem":"The","user":"User","category":"Category","extra":"Extra","option":"Option","menu":"Menu","generalInfo":"General Info","canManage":"is able to manage the site data","optional":"Optional","optionalFem":"Optional","to":"To","for":"For","this":"This","thisFem":"This","name":"Name","phone":"Phone","address":"Address","joinedAt":"Joined at","createdAt":"Created at","title":"Title","price":"Price","active":"Active","selectToAdd":"Select to Add","noExtras":"There are no Extras .","next":"Next","previous":"Prev","newOptions":"NEW OPTIONS","oldOptions":"OLD OPTIONS","confirmationTitle":"are you sure ?","confirmationText":"You won\'t be able to revert this","confirmationConfirm":"Yes, do it","settings":"Settings","orders":"Orders","general":"General","cart":"Cart","appNameDesc":"used for branding and emails","time":"Estimated time","tax":"Tax Rate","created":":item created successfully","updated":":item updated successfully","deleted":":item deleted successfully","bulkDeleted":"Selected item(s) deleted successfully","openingHours":"Opening Hours","addOpeningHours":"Add your business hours","splitHours":"Split hours","closed":"Closed","setAsClosed":"Set as Closed","monday":"monday","tuesday":"tuesday","wednesday":"Wednesday","thursday":"thursday","friday":"friday","saturday":"saturday","sunday":"sunday","forcedClose":"Forced Close","forcedCloseText":"this option will override the schedule and force close the restaurant","selectPolygon":"Select a polygon","noCategoryForMeal":"There is no category for the menu . it might have been deleted","min_order_price":"Minimum order price","nameOnCard":"Name on card","paymentDetails":"Payment Details","cashOnDeliveryText":"You will pay cash once the products are delivered","paymentMode":"Payment Mode","status":"Status","passedAt":"Passed at","orderDetails":"Order details","order":"Order","noUserForOrder":"No user in the database for this order . he might have been deleted","filterBy":"Filter by","pending":"Pending","processing":"Processing","out_for_delivery":"Out for Delivery","delivered":"Delivered","cancelled":"Cancelled","failed":"Failed","charge":"Charge","clientCharged":"Client charged","failure":"Failure","roles":"Roles","admin":"Admin","manager":"Manager","deliveryman":"Delivery man","client":"Client","print":"Print","invoice":"Invoice","track":"Track Order","paymentSuccessful":"Payment was successful","refund":"Refund","clientRefunded":"Client Refunded","onlinePayment":"Online Payment","refundSuccessful":"Refund was successful","subtotal":"Subtotal","from":"From","quantity":"Quantity","deliverymanRequired":"A delivery man is required for out for delivery and delivered statuses","manageProfile":"Manage Your Profile","orderCreated":"New Order has been placed. #:orderId","deliverymanSelected":"You have been selected to deliver order #:orderId","orderStatusChanged":"Your order #:orderId is :orderStatus","paymentConfirmationRequired":"Payment confirmation required for order #:orderId","userCharged":"You were charged :orderTotal dhs for order #:orderId","userRefunded":":orderTotal dhs has been refunded regarding order #:orderId","paymentConfirmationObtained":"Payment confirmation obtained for order #:orderId","clientCancelledOrder":"Order #:orderId has been cancelled by the client for delay reasons","noNotifications":"You\'re all caught up","notificationsCenter":"Notifications center","paymentRequiredConfirmation":"This order payment required confirmation from the client\'s bank","monthlySales":"Monthly Sales","monthlyUsers":"Monthly Users","monthlySalesText":"report of sales by month","monthlyUsersText":"report of users registration by month","registrations":"Registrations","revenue":"Revenue","monthlyRevenue":"Monthly Revenue","monthlyRevenueText":"report of revenue by month","latestOrder":"for the latest order","latestUser":"for the latest registration","noRevenuHistory":"does not include deleted history","promoteApp":"promote the app","addMoreMenus":"add more menus","checkPendingOrders":"check for pending orders","latestUsers":"Latest Users","manageTheirData":"Manage their data","search":"Search ...","notFound":"Resource not found","forbidden":"Action is unauthorized","lostText":"It looks like you\'re lost ...","goHome":"Go home","noInternet":"No Internet connection","notConnected":"Your are offline","notConnectedText":"And :appName isn\'t the same without you . let\'s get you back online!","try":"Try","checkCables":"Checking your network cables, modems and routers","checkNetwork":"Reconnecting to your wireless network","refreshPage":"Refresh the page","cancelOrder":"Cancel the order","cancelledSuccessfully":"Order cancelled successfully","cancelOrderGuide":"You can cancel if the status is still pending after 5 minutes since you placed the order","setHours":"Set the Hours","payment":"Payment","stripeEnabled":"Stripe Enabled","warning":"Warning","stripeWarning":"If those keys are not valid stripe keys. every interaction with stripe would fail .and the user would get a 500 server error . we suggest you put the right keys","stripeCheckoutNotice":"We support credit/debit card payment . it\'s just disabled for now","logoAdvice":"For better look .","cancel":"Cancel","uploading":"Uploading / Creating","uploadWasCancelled":"You have cancelled the upload"},"auth":{"failed":"These credentials do not match our records.","password":"The provided password is incorrect.","throttle":"Too many login attempts. Please try again in :seconds seconds."},"front":{"searchTitle":"Customize the search","search":"Search","categories":"Categories","filters":"Filters","all":"All","allFem":"All","category":"Category","addToCart":"Add","noMeals":"Sorry! There are no menus available","noMealsText":"we suggest to modify the search","noDescription":"Description not Available","noOption":"No Thank you","unavailable":"Not Available","customize":"Customize Your","yourCart":"Your Cart","delete":"Remove","cartEmpty":"Your cart is empty","cartEmptyText":"Buy a delicious meal before it gets cold","weAccept":"We accept","total":"Total with taxes","delivery":"Delivery","checkout":"Go to Checkout","dontDelay":"Don\'t delay the purchase,\\r\\n    adding items to your cart does not mean\\r\\n    Reserving them","successMessage":"Menu added to your cart","errorMessage":"an Error ocurred . Try again","and":"and","chooseAddress":"Choose your Address","chooseAddressText":"Choose your Address from the map or detect browser location","addressDetails":"Details (ex : Floor , House)","geolocationNotSupported":"Your Browser does not support Geolocation .Please enter your address Manually","permissionDenied":"You denied the Permission . Please add your address manually","add":"Add","addressAdded":"Address added successfully","noAddress":"No address available","outOfDeliveryZone":"Our of delivery zone","addressDirections":"Address Directions","detectAddresses":"Detect Addresses Automatically","toggleInstructions":"Toggle Instructions","closedNow":"Closed For Now"},"pagination":{"previous":"&laquo; Previous","next":"Next &raquo;"},"passwords":{"reset":"Your password has been reset!","sent":"We have emailed your password reset link!","throttled":"Please wait before retrying.","token":"This password reset token is invalid.","user":"We can\'t find a user with that email address."},"validation":{"accepted":" :attribute must be accepted.","active_url":" :attribute is not a valid URL.","after":" :attribute must be a date after :date.","after_or_equal":" :attribute must be a date after or equal to :date.","alpha":" :attribute must only contain letters.","alpha_dash":" :attribute must only contain letters, numbers, dashes and underscores.","alpha_num":" :attribute must only contain letters and numbers.","array":" :attribute must be an array.","before":" :attribute must be a date before :date.","before_or_equal":" :attribute must be a date before or equal to :date.","between":{"numeric":" :attribute must be between :min and :max.","file":" :attribute must be between :min and :max kilobytes.","string":" :attribute must be between :min and :max characters.","array":" :attribute must have between :min and :max items."},"boolean":" :attribute must be true or false.","confirmed":" :attribute confirmation does not match.","date":" :attribute is not a valid date.","date_equals":" :attribute must be a date equal to :date.","date_format":" :attribute does not match the format :format.","different":" :attribute and :other must be different.","digits":" :attribute must be :digits digits.","digits_between":" :attribute must be between :min and :max digits.","dimensions":" :attribute has invalid image dimensions.","distinct":" :attribute has a duplicate value.","email":" :attribute must be a valid email address.","ends_with":" :attribute must end with one of the following: :values.","exists":" selected :attribute is invalid.","file":" :attribute must be a file.","filled":" :attribute must have a value.","gt":{"numeric":" :attribute must be greater than :value.","file":" :attribute must be greater than :value kilobytes.","string":" :attribute must be greater than :value characters.","array":" :attribute must have more than :value items."},"gte":{"numeric":" :attribute must be greater than or equal :value.","file":" :attribute must be greater than or equal :value kilobytes.","string":" :attribute must be greater than or equal :value characters.","array":" :attribute must have :value items or more."},"image":" :attribute must be an image.","in":" selected :attribute is invalid.","in_array":" :attribute does not exist in :other.","integer":" :attribute must be an integer.","ip":" :attribute must be a valid IP address.","ipv4":" :attribute must be a valid IPv4 address.","ipv6":" :attribute must be a valid IPv6 address.","json":" :attribute must be a valid JSON string.","lt":{"numeric":" :attribute must be less than :value.","file":" :attribute must be less than :value kilobytes.","string":" :attribute must be less than :value characters.","array":" :attribute must have less than :value items."},"lte":{"numeric":" :attribute must be less than or equal :value.","file":" :attribute must be less than or equal :value kilobytes.","string":" :attribute must be less than or equal :value characters.","array":" :attribute must not have more than :value items."},"max":{"numeric":" :attribute must not be greater than :max.","file":" :attribute must not be greater than :max kilobytes.","string":" :attribute must not be greater than :max characters.","array":" :attribute must not have more than :max items."},"mimes":" :attribute must be a file of type: :values.","mimetypes":" :attribute must be a file of type: :values.","min":{"numeric":" :attribute must be at least :min.","file":" :attribute must be at least :min kilobytes.","string":" :attribute must be at least :min characters.","array":" :attribute must have at least :min items."},"multiple_of":" :attribute must be a multiple of :value.","not_in":" selected :attribute is invalid.","not_regex":" :attribute format is invalid.","numeric":" :attribute must be a number.","password":" password is incorrect.","present":" :attribute must be present.","regex":" :attribute format is invalid.","required":" :attribute is required.","required_if":" :attribute is required when :other is :value.","required_unless":" :attribute is required unless :other is in :values.","required_with":" :attribute is required when :values is present.","required_with_all":" :attribute is required when :values are present.","required_without":" :attribute is required when :values is not present.","required_without_all":" :attribute is required when none of :values are present.","prohibited_if":" :attribute is prohibited when :other is :value.","prohibited_unless":" :attribute is prohibited unless :other is in :values.","same":" :attribute and :other must match.","size":{"numeric":" :attribute must be :size.","file":" :attribute must be :size kilobytes.","string":" :attribute must be :size characters.","array":" :attribute must contain :size items."},"starts_with":" :attribute must start with one of the following: :values.","string":" :attribute must be a string.","timezone":" :attribute must be a valid zone.","unique":" :attribute has already been taken.","uploaded":" :attribute failed to upload.","url":" :attribute format url is invalid.","uuid":" :attribute must be a valid UUID.","isBetweenTheMinAndAdminSelectedOptions":" :attribute must be between the min and selected options sum","custom":{"attribute-name":{"rule-name":"custom-message"}},"attributes":{"name":"The Name","email":"The Email","address":"The Address","phone":"The Phone number","password":"The Password","is_admin":"is Admin","slug":"The Slug","title":"The Title","price":"The Price","description":"The Description","image":"The Image","category_id":"The Category","min":"The Min","max":"The Max","time":"The Time","tax":"The Tax rate","start":"Start hour","end":"End Hour","label":"The Label","roles":"The Roles","content":"The Content","current_password":"Current Password","new_password":"New Password","new_password_confirm":"New Password Confirmation","stripeKey":"Stripe Key","stripeSecret":"Stripe Secret"}}},"fr":{"0":1,"admin":{"adminPanel":"Panneau d\'Administration","overview":"Aperçu","dashboard":"Tableau de bord","management":"Gestion","users":"Utilisateurs","categories":"Catégories","extras":"Extras","options":"Options","menus":"Menus","account":"Compte","profile":"Profil","logout":"Se déconnecter","delete":"Suppression","add":"Ajouter","new":"Nouveau","save":"Sauvgarder","edit":"Modifier","discard":"retour","enter":"Entrer","select":"Sélectionner","the":"Le","theFem":"La","user":"Utilisateur","category":"Catégorie","extra":"Extra","option":"Option","menu":"Menu","generalInfo":"Info générales","canManage":"peut gérer les données du site","optional":"Optionnel","optionalFem":"Optionnelle","to":"À","for":"Pour","this":"Ce","thisFem":"Cette","name":"Nom","phone":"N.Téléphone","address":"Adresse","joinedAt":"Rejoint à","createdAt":"Créé à","title":"Titre","price":"Prix","active":"Actif","selectToAdd":"sélectionner pour ajouter","noExtras":"Il n\'y a pas de Extra .","next":"Suiv","previous":"Précéd","newOptions":"NOUVELLES OPTIONS","oldOptions":"ANCIENNES OPTIONS","confirmationTitle":"êtes-vous sûr ? ","confirmationText":"Vous ne pourrez pas récupérer  cela !","confirmationConfirm":"Oui, fais-le","settings":"Paramètres","orders":"Commandes","general":"Général","cart":"Panier","appNameDesc":"utilisé pour la marque et les e-mails","time":"Temps estimé","tax":"Taux d\'imposition","created":":item ajoutée avec succès","updated":":item modifiée avec succès","deleted":":item supprimées avec succès","bulkDeleted":"Éléments sélectionné(s) supprimés avec succès","openingHours":"Heures d\'ouverture","addOpeningHours":"Ajouter vos heures d\'ouverture","splitHours":"heures fractionnées","closed":"Fermé","setAsClosed":"Définir comme fermé","monday":"lundi","tuesday":"mardi","wednesday":"mercredi","thursday":"jeudi","friday":"vendredi","saturday":"samedi","sunday":"dimanche","forcedClose":"Fermeture forcée","forcedCloseText":"cette option remplacera l\'horaire et fermera le restaurant forcément","selectPolygon":"Sélectionnez un polygone","noCategoryForMeal":"Il n\'y a pas de catégorie pour le menu. il a peut-être été supprimé","min_order_price":"Prix ​​minimum de commande","nameOnCard":"Nom sur la carte","paymentDetails":"Détails de paiement","cashOnDeliveryText":"Vous paierez en espèces une fois les produits livrés","paymentMode":"Mode de paiement","status":"Statut","passedAt":"Passé à","orderDetails":"Détails de la commande","order":"Commande","noUserForOrder":"Aucun utilisateur dans la base de données pour cette commande. il aurait pu être supprimé","filterBy":"Filtrer par","pending":"En attente","processing":"En cours","out_for_delivery":"En route","delivered":"Livré","cancelled":"Annulé","failed":"Manquée","charge":"Facturez","clientCharged":"Client facturé","failure":"Échec","roles":"Rôles","admin":"Admin","manager":"Gérant","deliveryman":"Livreur","client":"Client","print":"Imprimer","invoice":"Facture","track":"Tracer Commande","paymentSuccessful":"Le paiement a réussi","refund":"Rembourser","clientRefunded":"Client remboursé","onlinePayment":"Paiement en ligne","refundSuccessful":"Le remboursement a réussi","subtotal":"Sous-total","from":"De","quantity":"Quantité","deliverymanRequired":"Un livreur est requis pour les statuts En route et Livré","manageProfile":"Gérez votre profil","orderCreated":"Une nouvelle commande a été passée. #:orderId","deliverymanSelected":"Vous avez été sélectionné pour livrer la commande #:orderId","orderStatusChanged":"Votre commande #:orderId est :orderStatus","paymentConfirmationRequired":"Confirmation de paiement requise pour la commande #:orderId","userCharged":"Vous avez été facturé :orderTotal dhs pour la commande #:orderId","userRefunded":":orderTotal dhs a été remboursé de la commande #:orderId","paymentConfirmationObtained":"Confirmation de paiement obtenue pour la commande #:orderId","clientCancelledOrder":"Commande #:orderId a été annulé par le client pour des raisons de retard","noNotifications":"Rien pour l\'instant","notificationsCenter":"Centre de notifications","ordersByMonth":"Ventes mensuelles","paymentRequiredConfirmation":"Le paiement de cette commande nécessitait une confirmation de la banque du client","monthlySales":"Ventes mensuelles","monthlyUsers":"Utilisateurs mensuels","monthlySalesText":"rapport de ventes par mois","monthlyUsersText":"rapport d\'inscription des utilisateurs par mois","registrations":"Inscriptions","revenue":"Revenu","monthlyRevenue":"Revenu mensuel","monthlyRevenueText":"rapport de revenus par mois","latestOrder":"pour la dernière commande","latestUser":"pour la dernière inscription","noRevenuHistory":"n\'inclut pas l\'historique supprimé","promoteApp":"promouvoir l\'application","addMoreMenus":"ajouter plus de menus","checkPendingOrders":"vérifier les commandes en attente","latestUsers":"Derniers utilisateurs","manageTheirData":"Gérer leurs données","search":"Recherche ...","notFound":"Ressource Introuvable","forbidden":"L\'action est Interdite","lostText":"Il semble que tu es perdu...","goHome":"Retour à l\'accueil","noInternet":"Pas de Connexion Internet","notConnected":"Tu n\'es pas Connecté","notConnectedText":"Et :appName n\'est tout simplement pas la même chose sans vous.\\r\\n    Nous allons vous ramener en ligne!","try":"Essayer","checkCables":"Vérification de vos câbles réseau, modem et routeurs","checkNetwork":"Reconnexion à votre réseau sans fil","refreshPage":"Rafraîchir la page","cancelOrder":"Annuler la commande","cancelledSuccessfully":"Commande annulée avec succès","cancelOrderGuide":"Vous pouvez annuler si le statut est toujours en attente après 5 minutes depuis que vous avez passé la commande","setHours":"Définir Les heures","payment":"Paiement","stripeEnabled":"Stripe activée","warning":"Attention","stripeWarning":"Si ces clés ne sont pas des clés de stripe valides. chaque interaction avec Stripe échouerait. et l\'utilisateur obtiendrait une erreur de serveur 500. nous vous suggérons de mettre les bonnes clés","stripeCheckoutNotice":"Nous prenons en charge le paiement par carte de crédit/débit. c\'est juste désactivé pour l\'instant","logoAdvice":"Pour mieux voir.","cancel":"Annuler","uploading":"Téléchargement / Création","uploadWasCancelled":"Vous avez annulé le téléchargement"},"auth":{"failed":"Ces identifiants ne correspondent pas à nos enregistrements.","password":"Le mot de passe fourni est incorrect.","throttle":"Tentatives de connexion trop nombreuses. Veuillez essayer de nouveau dans :seconds secondes."},"front":{"searchTitle":"Personnaliser la Recherche","search":"Rechercher","categories":"Catégories","filters":"Filtres","all":"Tous","allFem":"Toutes","category":"Catégorie","addToCart":"Ajouter","noMeals":"Pardon! Il n\'y a pas de menus disponibles","noMealsText":"nous suggérons de modifier la recherche","noDescription":"Description non disponible","noOption":"Non Merci","unavailable":"Non Disponible","customize":"Personnalisez votre","yourCart":"Votre Panier","delete":"Retirer","cartEmpty":"Votre Panier est Vide","cartEmptyText":"Achetez un délicieux repas avant qu\'il ne fasse froid","weAccept":"nous acceptons","total":"Total avec les taxes","delivery":"Livraison","checkout":"Valider La Commande","dontDelay":"Ne retardez pas l\'achat,\\r\\n    ajouter des articles à votre panier ne signifie pas les\\r\\n    réserver","successMessage":"Menu ajouté au panier","errorMessage":"Une erreur s\'est produite . Réessayer","and":"et","chooseAddress":"Choisissez votre adresse","chooseAddressText":"Choisissez votre adresse sur la carte ou détectez l\'emplacement du navigateur","addressDetails":"Détails (ex: étage, maison)","geolocationNotSupported":"Votre navigateur ne prend pas en charge la géolocalisation. Veuillez saisir votre adresse manuellement","permissionDenied":"Vous avez refusé l\'autorisation. Veuillez ajouter votre adresse manuellement","add":"Ajouter","addressAdded":"Adresse ajouté avec success","noAddress":"Aucune adresse disponible","outOfDeliveryZone":"Hors de zone de livraison","addressDirections":"Directions d\'Adresse","detectAddresses":"Détecter automatiquement les adresses","toggleInstructions":"Basculer Instructions","closedNow":"Fermé pour le moment"},"pagination":{"next":"Suivant &raquo;","previous":"&laquo; Précédent"},"passwords":{"reset":"Votre mot de passe a été réinitialisé !","sent":"Nous vous avons envoyé par email le lien de réinitialisation du mot de passe !","throttled":"Veuillez patienter avant de réessayer.","token":"Ce jeton de réinitialisation du mot de passe n\'est pas valide.","user":"Aucun utilisateur n\'a été trouvé avec cette adresse email."},"validation":{"accepted":":attribute doit être accepté.","active_url":":attribute n\'est pas une URL valide.","after":":attribute doit être une date postérieure au :date.","after_or_equal":":attribute doit être une date postérieure ou égale au :date.","alpha":":attribute doit contenir uniquement des lettres.","alpha_dash":":attribute doit contenir uniquement des lettres, des chiffres et des tirets.","alpha_num":":attribute doit contenir uniquement des chiffres et des lettres.","array":":attribute doit être un tableau.","attached":":attribute est déjà attaché(e).","before":":attribute doit être une date antérieure au :date.","before_or_equal":":attribute doit être une date antérieure ou égale au :date.","between":{"array":"tableau :attribute doit contenir entre :min et :max éléments.","file":"La taille du fichier de :attribute doit être comprise entre :min et :max kilo-octets.","numeric":"La valeur de :attribute doit être comprise entre :min et :max.","string":"texte :attribute doit contenir entre :min et :max caractères."},"boolean":":attribute doit être vrai ou faux.","confirmed":"de confirmation :attribute ne correspond pas.","date":":attribute n\'est pas une date valide.","date_equals":":attribute doit être une date égale à :date.","date_format":":attribute ne correspond pas au format :format.","different":" champs :attribute et :other doivent être différents.","digits":":attribute doit contenir :digits chiffres.","digits_between":":attribute doit contenir entre :min et :max chiffres.","dimensions":"La taille de l\'image :attribute n\'est pas conforme.","distinct":":attribute a une valeur en double.","email":":attribute doit être une adresse email valide.","ends_with":":attribute doit se terminer par une des valeurs suivantes : :values","exists":":attribute sélectionné est invalide.","file":":attribute doit être un fichier.","filled":":attribute doit avoir une valeur.","gt":{"array":"tableau :attribute doit contenir plus de :value éléments.","file":"La taille du fichier de :attribute doit être supérieure à :value kilo-octets.","numeric":"La valeur de :attribute doit être supérieure à :value.","string":"texte :attribute doit contenir plus de :value caractères."},"gte":{"array":"tableau :attribute doit contenir au moins :value éléments.","file":"La taille du fichier de :attribute doit être supérieure ou égale à :value kilo-octets.","numeric":"La valeur de :attribute doit être supérieure ou égale à :value.","string":"texte :attribute doit contenir au moins :value caractères."},"image":":attribute doit être une image.","in":":attribute est invalide.","in_array":":attribute n\'existe pas dans :other.","integer":":attribute doit être un entier.","ip":":attribute doit être une adresse IP valide.","ipv4":":attribute doit être une adresse IPv4 valide.","ipv6":":attribute doit être une adresse IPv6 valide.","json":":attribute doit être un document JSON valide.","lt":{"array":"tableau :attribute doit contenir moins de :value éléments.","file":"La taille du fichier de :attribute doit être inférieure à :value kilo-octets.","numeric":"La valeur de :attribute doit être inférieure à :value.","string":"texte :attribute doit contenir moins de :value caractères."},"lte":{"array":"tableau :attribute doit contenir au plus :value éléments.","file":"La taille du fichier de :attribute doit être inférieure ou égale à :value kilo-octets.","numeric":"La valeur de :attribute doit être inférieure ou égale à :value.","string":"texte :attribute doit contenir au plus :value caractères."},"max":{"array":"tableau :attribute ne peut contenir plus de :max éléments.","file":"La taille du fichier de :attribute ne peut pas dépasser :max kilo-octets.","numeric":"La valeur de :attribute ne peut être supérieure à :max.","string":"texte de :attribute ne peut contenir plus de :max caractères."},"mimes":":attribute doit être un fichier de type : :values.","mimetypes":":attribute doit être un fichier de type : :values.","min":{"array":"tableau :attribute doit contenir au moins :min éléments.","file":"La taille du fichier de :attribute doit être supérieure à :min kilo-octets.","numeric":"La valeur de :attribute doit être supérieure ou égale à :min.","string":"texte :attribute doit contenir au moins :min caractères."},"multiple_of":"La valeur de :attribute doit être un multiple de :value","not_in":":attribute sélectionné n\'est pas valide.","not_regex":"format du :attribute n\'est pas valide.","numeric":":attribute doit contenir un nombre.","password":"mot de passe est incorrect","present":":attribute doit être présent.","prohibited":":attribute est interdit.","prohibited_if":":attribute est interdit quand :other a la valeur :value.","prohibited_unless":":attribute est interdit à moins que :other est l\'une des valeurs :values.","regex":"format du :attribute est invalide.","relatable":":attribute n\'est sans doute pas associé(e) avec cette donnée.","required":":attribute est obligatoire.","required_if":":attribute est obligatoire quand la valeur de :other est :value.","required_unless":":attribute est obligatoire sauf si :other est :values.","required_with":":attribute est obligatoire quand :values est présent.","required_with_all":":attribute est obligatoire quand :values sont présents.","required_without":":attribute est obligatoire quand :values n\'est pas présent.","required_without_all":":attribute est requis quand aucun de :values n\'est présent.","same":" champs :attribute et :other doivent être identiques.","size":{"array":"tableau :attribute doit contenir :size éléments.","file":"La taille du fichier de :attribute doit être de :size kilo-octets.","numeric":"La valeur de :attribute doit être :size.","string":"texte de :attribute doit contenir :size caractères."},"starts_with":":attribute doit commencer avec une des valeurs suivantes : :values","string":":attribute doit être une chaîne de caractères.","timezone":":attribute doit être un fuseau horaire valide.","unique":"La valeur du :attribute est déjà utilisée.","uploaded":"fichier du :attribute n\'a pu être téléversé.","url":"format de l\'URL de :attribute n\'est pas valide.","uuid":":attribute doit être un UUID valide","isBetweenTheMinAndAdminSelectedOptions":":attribute doit être compris entre le min et la somme des options","custom":{"attribute-name":{"rule-name":"custom-message"}},"attributes":{"name":"Le Nom","email":"l\'Email","address":"l\'Adresse","phone":"Le Numéro de Téléphone","password":"Le Mot de passe","is_admin":"Est Admin","slug":"Le Slug","title":"Le Titre","price":"Le Prix","description":"La Description","image":"l\'Image","category_id":"La Catégorie","min":"Le Min","max":"Le Max","time":"Le Temps","tax":"Le Taux d\'imposition","start":"Heure de début","end":"Heure de fin","label":"Le Label","roles":"Les Rôles","content":"Le Contenu","current_password":"Mot de passe actuel","new_password":"nouveau mot de passe","new_password_confirm":"Confirmation nouveau mot de passe","stripeKey":"Stripe Key","stripeSecret":"Stripe Secret"}}}}');
 
 /***/ })
 

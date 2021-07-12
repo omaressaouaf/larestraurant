@@ -14,9 +14,13 @@ const state = {
         get: false,
         post: false
     },
+    progresses: [],
     serverErrors: null
 };
 const getters = {
+    uploadProgresses(state) {
+        return state.progresses;
+    },
     allMeals(state) {
         return state.meals;
     },
@@ -38,7 +42,7 @@ const actions = {
             store.commit("setMeals", res.data.meals);
         } catch (err) {
             redirectToErrorPageIfNeeded(err.response.status);
-            fireToast("danger", translate('front.errorMessage'));
+            fireToast("danger", translate("front.errorMessage"));
         }
         store.commit("clearLoading", "get");
     },
@@ -56,39 +60,75 @@ const actions = {
                 );
             } catch (err) {
                 redirectToErrorPageIfNeeded(err.response.status);
-                fireToast("danger", translate('front.errorMessage'));
+                fireToast("danger", translate("front.errorMessage"));
             }
             store.commit("clearLoading");
             nProgress.done();
         });
     },
+    async cancelUpload(_, source) {
+        source.cancel();
+    },
     async addMeal(store, newMeal) {
+        const progressIdentifier = Date.now();
+        const source = axios.CancelToken.source();
+
         try {
-            const config = {
+            if (newMeal.get("newImage")) {
+                store.commit("setProgress", {
+                    identifier: progressIdentifier,
+                    title: newMeal.get("title"),
+                    percentage: 0,
+                    source
+                });
+            } else {
+                store.commit("setLoading", "post");
+            }
+
+            const res = await axios.post("/api/meals", newMeal, {
                 headers: {
                     "Content-Type":
                         "multipart/form-data; charset=utf-8; boundary=" +
                         Math.random()
                             .toString()
                             .substr(2)
-                }
-            };
-            store.commit("setLoading", "post");
-            const res = await axios.post("/api/meals", newMeal, config);
+                },
+                cancelToken: source.token,
+                onUploadProgress: newMeal.get("newImage")
+                    ? ({ loaded, total }) => {
+                          const percentage = parseInt(
+                              Math.round((loaded * 100) / total)
+                          );
+                          store.commit("incrementProgress", {
+                              progressIdentifier,
+                              percentage
+                          });
+                      }
+                    : () => {}
+            });
             store.commit("addMeal", res.data.meal);
             store.commit("clearMeal");
+
             fireToast(
                 "success",
                 translate("admin.created", {
                     item: "Menu"
                 })
             );
-            router.push("/admin/meals");
+            if (router.currentRoute.name === "meals.create") {
+                router.push("/admin/meals");
+            }
         } catch (err) {
-            redirectToErrorPageIfNeeded(err.response.status);
-            store.commit("setServerErrors", err);
+            if (axios.isCancel(err)) {
+                fireToast("info", translate("admin.uploadWasCancelled"));
+            } else {
+                redirectToErrorPageIfNeeded(err.response.status);
+                store.commit("setServerErrors", err);
+            }
+        } finally {
+            store.commit("clearLoading", "post");
+            store.commit("clearProgress", progressIdentifier);
         }
-        store.commit("clearLoading", "post");
     },
     async fetchMeal(store, id) {
         try {
@@ -103,24 +143,46 @@ const actions = {
     },
 
     async updateMeal(store, updatedMeal) {
+        const progressIdentifier = Date.now();
+        const source = axios.CancelToken.source();
         try {
-            const config = {
-                headers: {
-                    "Content-Type":
-                        "multipart/form-data; charset=utf-8; boundary=" +
-                        Math.random()
-                            .toString()
-                            .substr(2)
-                }
-            };
-            store.commit("setLoading", "post");
+            if (updatedMeal.get("newImage")) {
+                store.commit("setProgress", {
+                    identifier: progressIdentifier,
+                    title: updatedMeal.get("title"),
+                    percentage: 0,
+                    source
+                });
+            } else {
+                store.commit("setLoading", "post");
+            }
             // even tho it's supposed to be a PUT method . we replaced it with POST in order for php to parse the form data and proccess it . but we need an additional
             // we appended the put method in order for the route to catch it
             updatedMeal.append("_method", "PUT");
             const res = await axios.post(
                 `/api/meals/${updatedMeal.get("id")}`,
                 updatedMeal,
-                config
+                {
+                    headers: {
+                        "Content-Type":
+                            "multipart/form-data; charset=utf-8; boundary=" +
+                            Math.random()
+                                .toString()
+                                .substr(2)
+                    },
+                    cancelToken: source.token,
+                    onUploadProgress: updatedMeal.get("newImage")
+                        ? ({ loaded, total }) => {
+                              const percentage = parseInt(
+                                  Math.round((loaded * 100) / total)
+                              );
+                              store.commit("incrementProgress", {
+                                  progressIdentifier,
+                                  percentage
+                              });
+                          }
+                        : () => {}
+                }
             );
             store.commit("updateMeal", res.data.meal);
             fireToast(
@@ -131,10 +193,16 @@ const actions = {
             );
             router.push("/admin/meals");
         } catch (err) {
-            redirectToErrorPageIfNeeded(err.response.status);
-            store.commit("setServerErrors", err);
+            if (axios.isCancel(err)) {
+                fireToast("info", translate("admin.uploadWasCancelled"));
+            } else {
+                redirectToErrorPageIfNeeded(err.response.status);
+                store.commit("setServerErrors", err);
+            }
+        } finally {
+            store.commit("clearLoading", "post");
+            store.commit("clearProgress", progressIdentifier);
         }
-        store.commit("clearLoading", "post");
     },
     bulkDeleteMeals(store, selectedItems) {
         return new Promise(async resolve => {
@@ -147,7 +215,7 @@ const actions = {
                 resolve();
             } catch (err) {
                 redirectToErrorPageIfNeeded(err.response.status);
-                fireToast("danger", translate('front.errorMessage'));
+                fireToast("danger", translate("front.errorMessage"));
             }
             store.commit("clearLoading", "post");
         });
@@ -181,6 +249,21 @@ const mutations = {
                 return meal.id !== id;
             });
         });
+    },
+    setProgress(state, progress) {
+        state.progresses = [progress, ...state.progresses];
+    },
+    incrementProgress(state, { progressIdentifier, percentage }) {
+        state.progresses = state.progresses.map(prog =>
+            prog.identifier === progressIdentifier
+                ? { ...prog, percentage }
+                : prog
+        );
+    },
+    clearProgress(state, progressIdentifier) {
+        state.progresses = state.progresses.filter(
+            prog => prog.identifier !== progressIdentifier
+        );
     },
     setLoading(state, method) {
         state.loading[method] = true;

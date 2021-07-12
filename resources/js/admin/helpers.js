@@ -68,3 +68,13 @@ export const fireToast = (type, message) => {
 };
 
 
+export const imageIsValid = file => {
+    return (
+        file &&
+        (file.type == "image/png" ||
+            file.type == "image/gif" ||
+            file.type == "image/jpeg" ||
+            file.type == "image/gif" ||
+            file.type == "image/svg+xml")
+    );
+};

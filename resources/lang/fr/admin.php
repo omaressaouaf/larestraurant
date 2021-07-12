@@ -19,7 +19,7 @@ return [
     "new" => "Nouveau",
     "save" => "Sauvgarder",
     "edit" => "Modifier",
-    "discard" => "Annuler",
+    "discard" => "retour",
     "enter" => "Entrer",
     "select" => "Sélectionner",
     "the" => "Le",
@@ -105,6 +105,7 @@ return [
     "failure" => 'Échec',
     "roles" => "Rôles",
     "admin" => "Admin",
+    "manager" => "Gérant",
     "deliveryman" => "Livreur",
     "client" => "Client",
     "print" => "Imprimer",
@@ -154,7 +155,7 @@ return [
     "notFound" => "Ressource Introuvable",
     "forbidden" => "L'action est Interdite",
     "lostText" => "Il semble que tu es perdu...",
-    "goHome" => "Retour au tableau de bord",
+    "goHome" => "Retour à l'accueil",
     "noInternet" => "Pas de Connexion Internet",
     "notConnected" => "Tu n'es pas Connecté",
     "notConnectedText" => "Et :appName n'est tout simplement pas la même chose sans vous.
@@ -170,6 +171,11 @@ return [
     "payment" => "Paiement",
     "stripeEnabled" => "Stripe activée",
     "warning" => "Attention",
-    "stripeWarning" => "Si ces clés ne sont pas des clés de stripe valides. chaque interaction avec Stripe échouerait. et l'utilisateur obtiendrait une erreur de serveur 500. nous vous suggérons de mettre les bonnes clés"
+    "stripeWarning" => "Si ces clés ne sont pas des clés de stripe valides. chaque interaction avec Stripe échouerait. et l'utilisateur obtiendrait une erreur de serveur 500. nous vous suggérons de mettre les bonnes clés",
+    "stripeCheckoutNotice" => "Nous prenons en charge le paiement par carte de crédit/débit. c'est juste désactivé pour l'instant",
+    "logoAdvice" => "Pour mieux voir.",
+    "cancel" => "Annuler",
+    "uploading" => "Téléchargement / Création",
+    "uploadWasCancelled" => "Vous avez annulé le téléchargement"
 
 ];

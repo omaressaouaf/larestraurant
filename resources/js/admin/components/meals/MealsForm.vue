@@ -216,7 +216,7 @@
                     v-if="!isCreateMode"
                   >
                     <img
-                      :src="form.resizedImage"
+                      :src="form.resized_image"
                       width="100"
                       height="100"
                       class="img-fluid rounded"
@@ -351,7 +351,12 @@
                             class="form-check"
                           >
                             <label
-                              class="form-check-label d-flex align-items-center flex-row"
+                              class="
+                                form-check-label
+                                d-flex
+                                align-items-center
+                                flex-row
+                              "
                             >
                               <input
                                 class="form-check-input"
@@ -429,6 +434,7 @@
                 }}
               </button>
             </form-wizard>
+            <progresses-list />
           </div>
         </div>
       </div>
@@ -443,6 +449,8 @@ import { FormWizard, TabContent } from "vue-form-wizard";
 import { required, integer, minValue } from "vuelidate/lib/validators";
 import "vue-form-wizard/dist/vue-form-wizard.min.css";
 import "vue-multiselect/dist/vue-multiselect.min.css";
+import ProgressesList from "./ProgressesList.vue";
+import { fireToast, imageIsValid } from '../../helpers';
 
 export default {
   data() {
@@ -513,6 +521,7 @@ export default {
   components: {
     FormWizard,
     TabContent,
+    ProgressesList,
   },
   watch: {
     mealObject() {
@@ -534,6 +543,7 @@ export default {
     ...mapGetters("extras", ["allExtras"]),
   },
   methods: {
+
     cancelImage() {
       $("#inputFileHidden").val("");
       $(".inputFileVisible").val("");
@@ -541,6 +551,7 @@ export default {
     },
     handleFileChange(e) {
       const file = e.target.files[0];
+      if(!imageIsValid(file)) return fireToast('danger' , "Invalid Image")
       $(".inputFileVisible").val(file.name);
       this.newImage = file;
     },
