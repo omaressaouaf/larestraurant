@@ -746,6 +746,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -2636,8 +2637,10 @@ var render = function() {
             _vm._v(
               "\n    " +
                 _vm._s(_vm.translate("admin.uploading")) +
-                " 2 " +
-                _vm._s(_vm.translate("admin.menu")) +
+                " " +
+                _vm._s(_vm.uploadProgresses.length) +
+                "\n    " +
+                _vm._s(_vm.translate("admin.image")) +
                 "(s)\n  "
             )
           ]),
