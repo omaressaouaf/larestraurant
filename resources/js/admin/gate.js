@@ -36,9 +36,10 @@ const gate = new Gate(window.authUser);
 gate.define("charge", order => {
     return (
         gate.hasRole("admin") &&
+        order.payment_mode == "stripe" &&
         !order.user_charged &&
         !order.payment_confirmation_required &&
-        order.payment_mode == "stripe" &&
+        order.status != "pending" &&
         order.status != "cancelled" &&
         order.status != "failed"
     );

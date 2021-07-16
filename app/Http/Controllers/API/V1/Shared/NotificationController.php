@@ -11,8 +11,10 @@ class NotificationController extends Controller
 
     public function getNotifications()
     {
+        /** @var \App\Models\User */
+        $authUser = auth()->user();
         return response()->json([
-            'notifications' => auth()->user()->notifications
+            'notifications' => $authUser->notifications()->latest()->take(15)->get()
         ]);
     }
     public function deleteNotifications()

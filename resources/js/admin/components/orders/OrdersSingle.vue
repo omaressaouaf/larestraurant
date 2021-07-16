@@ -244,7 +244,20 @@
                     <span class="font-weight-bold">Total</span>
                     <span class="float-right">{{ orderObject.total }} dhs</span>
                   </p>
+
                   <div v-if="$gate.can('manage')">
+                    <p
+                      v-if="
+                        orderObject.payment_mode === 'stripe' &&
+                        !orderObject.user_charged &&
+                        orderObject.status === 'pending'
+                      "
+                      class="text-info"
+                    >
+                      <i class="fa fa-info-circle"></i>
+                      {{ translate("admin.updateStatusInOrderToCharge") }}
+                    </p>
+
                     <button
                       class="btn btn-success btn-block"
                       v-if="$gate.can('charge', orderObject)"

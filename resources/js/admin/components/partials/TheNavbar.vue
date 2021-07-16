@@ -9,11 +9,19 @@
             class="btn btn-just-icon btn-white btn-fab btn-round"
           >
             <i
-              class="material-icons text_align-center visible-on-sidebar-regular"
+              class="
+                material-icons
+                text_align-center
+                visible-on-sidebar-regular
+              "
               >more_vert</i
             >
             <i
-              class="material-icons design_bullet-list-67 visible-on-sidebar-mini"
+              class="
+                material-icons
+                design_bullet-list-67
+                visible-on-sidebar-mini
+              "
               >view_list</i
             >
             <div class="ripple-container"></div>
@@ -25,7 +33,7 @@
         >
       </div>
       <ul class="d-flex flex-row d-lg-none navbar-nav align-items-center">
-        <notifications-list dropdown-unique-id="phone"/>
+        <notifications-list v-if="windowWidth < 1000" />
         <locale-switcher />
         <global-search v-if="$gate.can('manage')" />
       </ul>
@@ -46,7 +54,7 @@
         <global-search v-if="$gate.can('manage')" />
 
         <ul class="navbar-nav">
-          <notifications-list  dropdown-unique-id="desktop" />
+          <notifications-list v-if="windowWidth > 1000"  />
           <li class="nav-item dropdown d-none d-lg-block">
             <a
               class="nav-link"
@@ -109,7 +117,16 @@ export default {
       csrf: document.querySelector('meta[name="csrf-token"]').content,
       currentLocale: window.currentLocale,
       availableLocales: window.availableLocales,
+      windowWidth: window.innerWidth,
     };
+  },
+  mounted() {
+    window.addEventListener("resize", () => {
+      this.windowWidth = window.innerWidth;
+    });
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize");
   },
 };
 </script>

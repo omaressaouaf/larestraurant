@@ -1,5 +1,5 @@
 <template>
-  <li class="nav-item dropdown" :id="'notificationsDropdown' + dropdownUniqueId">
+  <li class="nav-item dropdown" id="notificationsDropdown">
     <a
       class="nav-link"
       href="#"
@@ -86,7 +86,6 @@ export default {
       authUser: window.authUser,
     };
   },
-  props: ["dropdownUniqueId"],
 
   methods: {
     revertToDefaultDocumentTitle() {
@@ -95,7 +94,7 @@ export default {
         document.title = document.title.replace(oldNotificationsTemplate, "");
       }
     },
-    increaseDocumentTileCount() {
+    increaseDocumentTitleCount() {
       this.revertToDefaultDocumentTitle();
       document.title = `(${this.unreadNotificationsLength + 1}) ${
         document.title
@@ -237,8 +236,10 @@ export default {
         read_at: null,
       };
       this.notifications.unshift(newNotification);
-      this.increaseDocumentTileCount();
+
+      this.increaseDocumentTitleCount();
       this.unreadNotificationsLength++;
+
       if (notification.event_name == "orderCreated") {
         this.$store.commit("orders/addOrder", notification.order);
       }
@@ -259,8 +260,7 @@ export default {
   },
   mounted() {
     //   listening for dropdown close event
-    $("#notificationsDropdown" + this.dropdownUniqueId).on("hide.bs.dropdown", () => {
-      console.log("hii");
+    $("#notificationsDropdown").on("hide.bs.dropdown", () => {
       if (this.unreadNotificationsLength) {
         this.markNotifications();
       }

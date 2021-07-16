@@ -673,5 +673,6 @@
     "Closed" : "Fermés",
     "Thanks" : "Merci",
     "Check out" : "Vérifiez ça",
-    "Order Notification" : "Notification de commande"
+    "Order Notification" : "Notification de commande",
+    "No Orders for now" : "Aucune commande pour le moment"
 }

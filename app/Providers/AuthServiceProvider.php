@@ -39,7 +39,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('cancel_order', function (User $user, Order $order) {
             return $order->status == "pending" && $order->created_at->diffInMinutes(Carbon::now()) > 5;
         });
-        Gate::define('shop', function (User $user =null) {
+        Gate::define('shop', function (User $user = null) {
 
             $openingHours = OpeningHours::create(array_merge(['overflow' => true],  config('schedule.openingHours')));
             $forcedClose = config('schedule.forcedClose');
@@ -48,11 +48,12 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('checkout-with-stripe', function (User $user) {
             return config('payment.stripeEnabled')  === true;
         });
-        // For admins and delivery men
+        // For management
         Gate::define('charge', function (User $user, Order $order) {
             return ($user->hasRole('admin') && $order->payment_mode == "stripe"  &&
                 !$order->user_charged &&
                 !$order->payment_confirmation_required &&
+                $order->status != "pending" &&
                 $order->status != "cancelled" &&
                 $order->status != "failed");
         });

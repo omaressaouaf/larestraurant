@@ -6,7 +6,7 @@ Vos commandes -
 <div class="mt-4">
     <h4 class="font-weight-bold"># {{ __('Your Latest Orders') }}</h4>
     <p class="text-muted  mb-5">{{ __('Consult your Orders') }}</p>
-    @foreach ($authUserOrders as $order)
+    @forelse ($authUserOrders as $order)
     <div class="col-md-12 ">
         <div class="d-flex" class="order-flex-div">
             <div class="@if (!$loop->last) col-step @endif">
@@ -67,7 +67,12 @@ Vos commandes -
             </div>
         </div>
     </div>
-    @endforeach
+
+    @empty
+    <h6 class="lead mt-4 ml-2">
+        {{ __('No Orders for now') }}
+    </h6>
+    @endforelse
     {{ $authUserOrders->links() }}
 </div>
 @endsection

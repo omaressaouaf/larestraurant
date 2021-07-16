@@ -757,6 +757,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2686,6 +2699,25 @@ var render = function() {
                           _vm._v(" "),
                           _vm.$gate.can("manage")
                             ? _c("div", [
+                                _vm.orderObject.payment_mode === "stripe" &&
+                                !_vm.orderObject.user_charged &&
+                                _vm.orderObject.status === "pending"
+                                  ? _c("p", { staticClass: "text-info" }, [
+                                      _c("i", {
+                                        staticClass: "fa fa-info-circle"
+                                      }),
+                                      _vm._v(
+                                        "\n                    " +
+                                          _vm._s(
+                                            _vm.translate(
+                                              "admin.updateStatusInOrderToCharge"
+                                            )
+                                          ) +
+                                          "\n                  "
+                                      )
+                                    ])
+                                  : _vm._e(),
+                                _vm._v(" "),
                                 _vm.$gate.can("charge", _vm.orderObject)
                                   ? _c(
                                       "button",
