@@ -7,8 +7,6 @@ use App\Http\Controllers\Controller;
 class NotificationController extends Controller
 {
 
-
-
     public function getNotifications()
     {
         /** @var \App\Models\User */
