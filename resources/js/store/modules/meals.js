@@ -49,7 +49,7 @@ const actions = {
     },
     async fetchCategories(store) {
         try {
-            const res = await axios.get("/api/categories");
+            const res = await axios.get("/categories");
             store.commit("setCategories", res.data.categories);
         } catch (err) {
             fireToast("danger", translate('front.successMessage'));
@@ -58,7 +58,7 @@ const actions = {
 };
 const mutations = {
     setMeals(state, meals) {
-        // if this is the first api call. then we wanna reset the meals .  if it's infinite loading call we wanna append to the meals
+        // if this is the first api call.  we wanna reset the meals .  if it's infinite loading call we wanna append to the meals
         if (meals.current_page == 1) {
             state.meals = meals.data;
         } else {

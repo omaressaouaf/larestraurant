@@ -131,6 +131,8 @@ window.gate = gate;
 Vue.use(VueLoaders);
 Vue.use(VueOnlineProp);
 
+axios.defaults.baseURL ="/api/v1/management" ;
+
 const app = new Vue({
     el: "#app",
     router,

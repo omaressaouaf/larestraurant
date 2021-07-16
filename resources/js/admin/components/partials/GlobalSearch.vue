@@ -76,7 +76,7 @@ export default {
       this.closed = false;
       this.loading = true;
       axios
-        .get("/api/dashboard/search", { params: { query: this.query } })
+        .get("/dashboard/search", { params: { query: this.query } })
         .then((res) => {
           this.results = res.data.results;
         })

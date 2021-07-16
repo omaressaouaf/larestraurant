@@ -28370,7 +28370,7 @@ button:disabled {
   display: block;
 }
 
-#notificationsDropdown .notification {
+#notificationsDropdownLink .notification {
   position: absolute;
   top: 5px;
   border: 1px solid #FFF;

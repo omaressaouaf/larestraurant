@@ -64,7 +64,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import BaseModal from "../partials/BaseModal.vue";
 import MapBoxGl from "../partials/MapBoxGl.vue";
 import { fireAlert } from '../../helpers';

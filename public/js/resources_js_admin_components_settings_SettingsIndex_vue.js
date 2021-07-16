@@ -293,7 +293,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           }
         });
 
-        axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/settings/app", formData).then(function (res) {
+        axios__WEBPACK_IMPORTED_MODULE_0___default().post("/settings/app", formData).then(function (res) {
           (0,_helpers__WEBPACK_IMPORTED_MODULE_1__.fireToast)("success", translate("admin.updated", {
             item: translate("admin.settings")
           }));
@@ -420,7 +420,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (!this.$v.$invalid) {
         this.loading = true;
-        axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/settings/cart", this.form).then(function (res) {
+        axios__WEBPACK_IMPORTED_MODULE_0___default().post("/settings/cart", this.form).then(function (res) {
           (0,_helpers__WEBPACK_IMPORTED_MODULE_1__.fireToast)("success", translate("admin.updated", {
             item: translate("admin.settings")
           }));
@@ -650,7 +650,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (!this.$v.$invalid) {
         this.loading = true;
-        axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/settings/delivery", this.form).then(function (res) {
+        axios__WEBPACK_IMPORTED_MODULE_0___default().post("/settings/delivery", this.form).then(function (res) {
           (0,_helpers__WEBPACK_IMPORTED_MODULE_1__.fireToast)("success", translate("admin.updated", {
             item: translate("admin.settings")
           }));
@@ -830,7 +830,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (!this.$v.$invalid) {
         this.loading = true;
-        axios__WEBPACK_IMPORTED_MODULE_0___default().post("/api/settings/payment", this.form).then(function (res) {
+        axios__WEBPACK_IMPORTED_MODULE_0___default().post("/settings/payment", this.form).then(function (res) {
           (0,_helpers__WEBPACK_IMPORTED_MODULE_1__.fireToast)("success", translate("admin.updated", {
             item: translate("admin.settings")
           }));
@@ -1090,7 +1090,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       this.loading = true;
-      axios.post("/api/settings/schedule", this.schedule).then(function (res) {
+      axios.post("/settings/schedule", this.schedule).then(function (res) {
         (0,_helpers__WEBPACK_IMPORTED_MODULE_0__.fireToast)("success", translate("admin.updated", {
           item: translate("admin.settings")
         }));
@@ -1270,7 +1270,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.loading = true;
-      axios.get("/api/settings").then(function (res) {
+      axios.get("/settings").then(function (res) {
         _this.settings = res.data.settings;
 
         _this.$store.commit("setAppName", _this.settings.app.name);

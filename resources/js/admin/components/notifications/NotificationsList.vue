@@ -180,8 +180,8 @@ export default {
     },
     getNotifications() {
       this.loading = true;
-      axios
-        .get("/api/notifications")
+      axiosSharedApi
+        .get("/notifications")
         .then((res) => {
           this.notifications = res.data.notifications;
           const unreadNotifications = this.notifications.filter(
@@ -201,8 +201,8 @@ export default {
     deleteNotifications(e) {
       e.stopPropagation();
       this.loading = true;
-      axios
-        .delete("/api/notifications")
+      axiosSharedApi
+        .delete("/notifications")
         .then((res) => {
           this.notifications = [];
           this.revertToDefaultDocumentTitle();
@@ -216,8 +216,8 @@ export default {
         });
     },
     markNotifications() {
-      axios
-        .put("/api/notifications")
+      axiosSharedApi
+        .put("/notifications")
         .then((res) => {
           this.getNotifications();
           this.revertToDefaultDocumentTitle();

@@ -13,11 +13,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _partials_BaseModal_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../partials/BaseModal.vue */ "./resources/js/admin/components/partials/BaseModal.vue");
-/* harmony import */ var _partials_MapBoxGl_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../partials/MapBoxGl.vue */ "./resources/js/admin/components/partials/MapBoxGl.vue");
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../helpers */ "./resources/js/admin/helpers.js");
+/* harmony import */ var _partials_BaseModal_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../partials/BaseModal.vue */ "./resources/js/admin/components/partials/BaseModal.vue");
+/* harmony import */ var _partials_MapBoxGl_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../partials/MapBoxGl.vue */ "./resources/js/admin/components/partials/MapBoxGl.vue");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../helpers */ "./resources/js/admin/helpers.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -92,11 +90,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    BaseModal: _partials_BaseModal_vue__WEBPACK_IMPORTED_MODULE_2__.default,
-    MapBoxGl: _partials_MapBoxGl_vue__WEBPACK_IMPORTED_MODULE_3__.default
+    BaseModal: _partials_BaseModal_vue__WEBPACK_IMPORTED_MODULE_1__.default,
+    MapBoxGl: _partials_MapBoxGl_vue__WEBPACK_IMPORTED_MODULE_2__.default
   },
   props: ["endAddressLine", "endAddressDetails"],
   data: function data() {
@@ -144,7 +141,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this2 = this;
 
       if (!navigator.geolocation) {
-        (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireAlert)("error", (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireAlert)("error", translate("front.geolocationNotSupported")));
+        (0,_helpers__WEBPACK_IMPORTED_MODULE_3__.fireAlert)("error", (0,_helpers__WEBPACK_IMPORTED_MODULE_3__.fireAlert)("error", translate("front.geolocationNotSupported")));
         return;
       }
 
@@ -171,7 +168,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _context.prev = 7;
                   _context.t0 = _context["catch"](0);
                   console.log(_context.t0);
-                  (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireAlert)("error", translate("front.errorMessage"));
+                  (0,_helpers__WEBPACK_IMPORTED_MODULE_3__.fireAlert)("error", translate("front.errorMessage"));
 
                 case 11:
                   _this2.directions.setDestination(_this2.endAddressLine);
@@ -190,7 +187,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           return _ref.apply(this, arguments);
         };
       }(), function (error) {
-        (0,_helpers__WEBPACK_IMPORTED_MODULE_4__.fireAlert)("error", translate("front.permissionDenied"));
+        (0,_helpers__WEBPACK_IMPORTED_MODULE_3__.fireAlert)("error", translate("front.permissionDenied"));
 
         _this2.directions.setDestination(_this2.endAddressLine);
 
@@ -205,7 +202,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var longitude = _ref2.longitude,
           latitude = _ref2.latitude;
       return new Promise(function (resolve, reject) {
-        axios__WEBPACK_IMPORTED_MODULE_1___default().get("https://api.mapbox.com/geocoding/v5/mapbox.places/".concat(longitude, ",").concat(latitude, ".json?access_token=").concat(_this3.token, "&limit=1")).then(function (res) {
+        axios.get("https://api.mapbox.com/geocoding/v5/mapbox.places/".concat(longitude, ",").concat(latitude, ".json?access_token=").concat(_this3.token, "&limit=1")).then(function (res) {
           resolve(res.data.features[0].place_name);
         })["catch"](function (err) {
           reject(err);

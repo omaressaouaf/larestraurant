@@ -5,7 +5,7 @@
         <div class="col-xl-4 order-xl-2 mt-3">
           <div id="cartWrapper">
             <cart />
-          
+
           </div>
         </div>
 
@@ -19,11 +19,7 @@
 </template>
 
 <script>
-import Cart from "../cart/Cart.vue";
-import MealsList from "./MealsList.vue";
-import MealsSingle from "./MealsSingle.vue";
 export default {
-  components: { Cart, MealsList, MealsSingle },
 };
 </script>
 

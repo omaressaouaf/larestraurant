@@ -16,7 +16,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 import "dayjs/locale/fr";
 
-import VueLoaders from 'vue-loaders';
+import VueLoaders from "vue-loaders";
 import "vue-loaders/dist/vue-loaders.css";
 
 // ______________________________________________Component global registration______________________________
@@ -24,6 +24,35 @@ import "vue-loaders/dist/vue-loaders.css";
 Vue.component(
     "meals-index",
     require("./components/meals/MealsIndex.vue").default
+);
+Vue.component(
+    "meals-list",
+    require("./components/meals/MealsList.vue").default
+);
+Vue.component(
+    "meals-item",
+    require("./components/meals/MealsItem.vue").default
+);
+Vue.component(
+    "meals-search",
+    require("./components/meals/MealsSearch.vue").default
+);
+Vue.component(
+    "meals-single",
+    require("./components/meals/MealsSingle.vue").default
+);
+Vue.component(
+    "meals-skeleton",
+    require("./components/meals/MealsSkeleton.vue").default
+);
+
+Vue.component(
+    "cart",
+    require("./components/cart/Cart.vue").default
+);
+Vue.component(
+    "cart-skeleton",
+    require("./components/cart/CartSkeleton.vue").default
 );
 Vue.component("vue-skeleton-loader", VueSkeletonLoader);
 Vue.component(
@@ -34,21 +63,23 @@ Vue.component(
     "address-list",
     require("./admin/components/addresses/AddressList.vue").default
 );
+
 Vue.component(
-    "checkout-form",
-    require("./components/CheckoutForm.vue").default
+    "notifications-list",
+    require("./admin/components/notifications/NotificationsList.vue").default
 );
-Vue.component('notifications-list' , require('./admin/components/notifications/NotificationsList.vue').default);
 Vue.component(
     "locale-switcher",
     require("./admin/components/partials/LocaleSwitcher.vue").default
 );
-
+Vue.component(
+    "checkout-form",
+    require("./components/orders/CheckoutForm.vue").default
+);
 Vue.component(
     "order-tracker",
-    require("./components/OrderTracker.vue").default
+    require("./components/orders/OrderTracker.vue").default
 );
-
 
 // ______________________________________________Filters______________________________________________
 
@@ -88,6 +119,8 @@ if (document.documentElement.lang == "fr") {
     dayjs.locale("fr");
 }
 Vue.use(VueLoaders);
+
+axios.defaults.baseURL = "/api/v1/client";
 
 const router = new VueRouter({
     mode: "history",

@@ -28,12 +28,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import MealsItem from "./MealsItem.vue";
-import MealsSearch from "./MealsSearch.vue";
-import MealsSkeleton from "./MealsSkeleton.vue";
-
 export default {
-  components: { MealsSkeleton, MealsSearch, MealsItem },
   data() {
     return {
       page: 1,

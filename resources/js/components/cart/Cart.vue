@@ -239,9 +239,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import CartSkeleton from "./CartSkeleton.vue";
 export default {
-  components: { CartSkeleton },
   data() {
     return {
       deliveryPrice: window.deliveryPrice,

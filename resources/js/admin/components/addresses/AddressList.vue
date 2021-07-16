@@ -83,8 +83,8 @@ export default {
     },
     fetchAddresses() {
       this.loading = true;
-      axios
-        .get(`/api/addresses?userId=${this.userId}`)
+      axiosSharedApi
+        .get(`/addresses?userId=${this.userId}`)
         .then((res) => {
           this.addresses = res.data.addresses;
         })
@@ -98,8 +98,8 @@ export default {
     deleteAddress(id) {
       fireConfirm(() => {
         nProgress.start();
-        axios
-          .delete(`/api/addresses/${id}`)
+        axiosSharedApi
+          .delete(`/addresses/${id}`)
           .then((res) => {
             this.addresses = this.addresses.filter(
               (address) => address.id != id

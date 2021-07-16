@@ -1,21 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\V1\Management;
 
 use App\Events\DeliverymanSelected;
 use App\Events\OrderStatusChanged;
-use Exception;
-use App\Models\User;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-
 use App\Services\CheckoutService;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Laravel\Cashier\Exceptions\PaymentFailure;
-use Laravel\Cashier\Exceptions\PaymentActionRequired;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class OrderController extends Controller
 {
