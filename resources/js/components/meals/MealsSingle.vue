@@ -274,7 +274,6 @@ export default {
     handleAddToCart() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
-        this.cartItem.price = this.priceWithOptions;
         this.addToCart(this.cartItem).then(() => {
           this.cartItem = {};
           // this doesn't work now (after resetting the form values in the previous lines)
