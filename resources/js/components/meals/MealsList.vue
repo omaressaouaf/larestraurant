@@ -1,217 +1,89 @@
 <template>
-  <div class="container-fluid">
-    <the-breadcrumb>
-      <li class="breadcrumb-item active">{{ translate("admin.menus") }}</li>
-    </the-breadcrumb>
-
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="d-flex">
-            <div
-              class="card-header card-header-icon card-header-warning"
-              style="flex-grow: 1 !important"
-            >
-              <div class="card-icon card-icon-custom">
-                <i class="material-icons">lunch_dining</i>
-              </div>
-              <h4 class="card-title">
-                {{ translate("admin.menus") + " Table" }}
-              </h4>
-            </div>
-            <div class="mt-2">
-              <!-- <button class="btn btn-secondary"> <i class="fa fa-sync-alt"></i> </button> -->
-              <button
-                class="btn btn-danger"
-                @click="prepareBulkDeleteMeals"
-                :disabled="postIsLoading"
-              >
-                <span>
-                  <i
-                    v-if="postIsLoading"
-                    class="fa fa-circle-notch fa-spin"
-                  ></i>
-                  <i v-else class="fa fa-dumpster"></i>
-                  {{ translate("admin.delete") }}
-                </span>
-              </button>
-
-              <router-link :to="{ name: 'meals.create' }">
-                <button class="btn btn-outline-success mr-2">
-                  <i class="fa fa-plus-circle"></i>
-                  <span>
-                    {{
-                      translate("admin.add") + " " + translate("admin.menu")
-                    }}</span
-                  >
-                </button>
-              </router-link>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-striped table-hover" id="dataTable">
-                <thead>
-                  <tr>
-                    <th>
-                      <input
-                        :disabled="getIsLoading"
-                        type="checkbox"
-                        v-model="allSelected"
-                        @click="selectOrUnSelectAll"
-                      />
-                    </th>
-                    <th>ID</th>
-                    <th>{{ translate("admin.title") }}</th>
-                    <th>{{ translate("admin.price") }}</th>
-                    <th>{{ translate("admin.active") }}</th>
-                    <th>{{ translate("admin.category") }}</th>
-                    <th>Image</th>
-                    <th>Extras</th>
-                    <th>{{ translate("admin.createdAt") }}</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-if="getIsLoading">
-                    <td colspan="10" class="text-center py-5">
-                      <vue-loaders-ball-scale-ripple-multiple
-                        color="#2B51C4"
-                        scale="1"
-                      ></vue-loaders-ball-scale-ripple-multiple>
-                    </td>
-                  </tr>
-                  <tr v-for="meal in allMeals" :key="meal.id" v-else>
-                    <td>
-                      <input
-                        type="checkbox"
-                        v-model="selectedItems"
-                        :value="meal.id"
-                      />
-                    </td>
-                    <td>{{ meal.id }}</td>
-                    <td>{{ meal.title }}</td>
-                    <td>{{ meal.price }} DH</td>
-                    <td>
-                      <i
-                        :class="[
-                          meal.active
-                            ? 'fa fa-check text-success'
-                            : 'fa fa-times text-danger',
-                        ]"
-                      ></i>
-                    </td>
-                    <td :class="{ 'text-danger': !meal.category.id }">
-                      <i v-if="!meal.category.id" class="fa fa-info-circle"></i>
-                      {{ meal.category.name }}
-                    </td>
-                    <td>
-                      <img
-                        width="80"
-                        height="80"
-                        class="img-fluid rounded"
-                        :src="meal.resized_image"
-                      />
-                    </td>
-                    <td class="text-center">
-                      <h5>
-                        <span
-                          class="badge"
-                          :class="[
-                            !meal.extras_count
-                              ? 'badge-danger'
-                              : 'badge-primary',
-                          ]"
-                          >{{ meal.extras_count }}</span
-                        >
-                      </h5>
-                    </td>
-                    <td>{{ meal.created_at | formatDate }}</td>
-                    <td>
-                      <router-link
-                        class="mr-4"
-                        :to="{
-                          name: 'meals.edit',
-                          params: { id: meal.id },
-                        }"
-                        ><i class="fa fa-pen text-success"></i
-                      ></router-link>
-                      <a href="#" @click.prevent="deleteMeal(meal.id)"
-                        ><i class="fa fa-trash text-danger"></i
-                      ></a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="mt-5">
-              <progresses-list />
-            </div>
-          </div>
+  <div>
+    <meals-search />
+    <div class="row" v-if="getIsLoading">
+      <meals-skeleton v-for="item in [1, 2, 3, 4, 5, 6]" :key="item" />
+    </div>
+    <transition name="fade">
+      <div class="row" v-if="!getIsLoading">
+        <div v-if="!allMeals.length" class="col-12 text-center mt-4">
+          <i class="fa fa-utensils text-muted fa-3x mb-3"></i>
+          <h3>{{ translate("front.noMeals") }}.</h3>
+          <h5 class="text-muted">{{ translate("front.noMealsText") }}</h5>
+        </div>
+        <div
+          v-for="meal in allMeals"
+          :key="meal.id"
+          class="col-12 col-sm-8 col-md-6 col-lg-4 mt-2"
+        >
+          <meals-item :meal="meal" />
+        </div>
+        <div class="col-md-12">
+          <infinite-loading @infinite="infiniteHandler" />
         </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
 <script>
-import { dataTableMixin } from "../../mixins";
-import { mapGetters, mapActions } from "vuex";
-import { fireConfirm } from "../../helpers";
-import ProgressesList from "./ProgressesList.vue";
-
+import { mapActions, mapGetters } from "vuex";
 export default {
-  components: { ProgressesList },
-  mixins: [dataTableMixin],
   data() {
     return {
-      selectedItems: [],
-      allSelected: false,
+      page: 1,
     };
-  },
-  watch: {
-    selectedItems() {
-      this.allSelected =
-        this.selectedItems.length === this.allMeals.length ? true : false;
-    },
   },
   computed: {
     getIsLoading() {
       return this.isLoading["get"];
     },
-    postIsLoading() {
-      return this.isLoading["post"];
-    },
 
     ...mapGetters("meals", ["allMeals", "isLoading"]),
   },
-  methods: {
-    selectOrUnSelectAll() {
-      if (this.allSelected) {
-        this.selectedItems = [];
-      } else {
-        this.allMeals.forEach((meal) => {
-          this.selectedItems.push(meal.id);
-        });
-      }
+  watch: {
+    // $route watcher will execute immediately after the component creation and when the route params/query changes
+    $route: {
+      immediate: true,
+      handler() {
+        // always reset the page to 1 when the route changes (in case of filtering)
+        this.page = 1;
+        // increment the page if the api call went through successfully
+        this.fetchMeals({ page: this.page, ...this.$route.query }).then(
+          () => (this.page += 1)
+        );
+      },
     },
-    prepareBulkDeleteMeals() {
-      if (!this.selectedItems.length) {
-        return;
-      }
-      fireConfirm(async () => {
-        await this.bulkDeleteMeals(this.selectedItems);
-        this.selectedItems = [];
-      });
-    },
-    ...mapActions("meals", ["fetchMeals", "deleteMeal", "bulkDeleteMeals"]),
   },
+  methods: {
+    infiniteHandler($state) {
+      if (this.allMeals.length) {
+        this.fetchMeals({ page: this.page, ...this.$route.query }).then(
+          (nextPageUrl) => {
+            if (nextPageUrl) {
+              this.page += 1;
+              $state.loaded();
+            } else {
+              $state.complete();
+            }
+          }
+        );
+      } else {
+        $state.complete();
+      }
+    },
 
-  created() {
-    this.fetchMeals();
+    ...mapActions("meals", ["fetchMeals"]),
   },
 };
 </script>
 
-<style>
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.6s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 </style>
